@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "scripts": {
+    "serve": "npx webpack serve",
+    "dev": "webpack-dev-server",
+    "build": "webpack --env.prod"
+  },
+  "dependencies": {
+    "@webpack-cli/serve": "^1.7.0",
+    "bootstrap": "^5.2.2",
+    "vue": "^3.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.0-beta.3",
+    "css-loader": "^3.5.2",
+    "file-loader": "^6.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "url-loader": "^4.1.0",
+    "vue-loader": "^16.0.0-alpha.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "keywords": [],
+  "name": "webpack-vue-3",
+  "description": ""
+}

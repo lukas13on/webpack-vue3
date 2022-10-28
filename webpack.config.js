@@ -1,17 +1,18 @@
-const path = require('path')
-const { VueLoaderPlugin } = require('vue-loader')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env = {}) => ({
-  mode: env.prod ? 'production' : 'development',
-  devtool: env.prod ? 'source-map' : 'cheap-module-eval-source-map',
+  cache: false,
+  watch: true,
+  mode: 'development',
+  devtool: 'source-map',
   entry: [
-    env.prod ? false : require.resolve(`webpack-dev-server/client`),
     path.resolve(__dirname, './src/main.js')
   ].filter(Boolean),
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/'
+    path: path.resolve(__dirname, './public_html'),
+    publicPath: '/public_html/'
   },
   resolve: {
     alias: {
@@ -31,8 +32,7 @@ module.exports = (env = {}) => ({
       {
         test: /\.png$/,
         use: {
-          loader: 'url-loader',
-          options: { limit: 8192 }
+          loader: 'url-loader'
         }
       },
       {
@@ -54,12 +54,23 @@ module.exports = (env = {}) => ({
     })
   ],
   devServer: {
-    inline: true,
+    static: {
+      directory: path.join(__dirname, "public_html"),
+      serveIndex: true,
+    },
+    watchFiles: {
+      paths: [path.join(__dirname, "src/**/*")]
+    },
+    client: {
+      progress: true,
+      reconnect: true,
+      overlay: true
+    },
     hot: true,
-    stats: 'minimal',
-    contentBase: __dirname,
-    overlay: true,
-    injectClient: false,
-    disableHostCheck: true
+    server: 'http',
+    https: false,
+    compress: true,
+    liveReload: true,
+    port: 3010
   }
-})
+});

@@ -1,9 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "serve": "npx webpack serve",
-    "dev": "webpack-dev-server",
-    "build": "webpack --env.prod"
+    "webpack": "npx webpack"
   },
   "dependencies": {
     "@webpack-cli/serve": "^1.7.0",

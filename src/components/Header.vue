@@ -1,6 +1,6 @@
 <template>
     <header>
-        <p>{{message}}</p>
+        <p>{{ message }}</p>
     </header>
 </template>
 
@@ -8,7 +8,7 @@
 export default {
     data: function () {
         return {
-            message: 'Olar'
+            message: 'Cabeçalhoaasssaaa'
         };
     }
 }

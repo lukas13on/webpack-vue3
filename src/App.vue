@@ -1,11 +1,12 @@
 <template>
   <Header></Header>
-  <Main>
+  <Main> 
     <Content>
       <img src="./assets/logo.png">
       <h1>Hello Lucas !</h1>
       <button @click="inc">Clicked {{ count }} times.</button>
       <p>{{ message }}</p>
+      <Element id="hmm" tag="div" class="test"></Element>
     </Content>
   </Main>
   <Aside></Aside>
@@ -15,9 +16,12 @@
 <script>
 import { ref } from 'vue';
 
+// test
+import Element from './components/editor/Element.vue';
+
 // Css
 import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
+ 
 // Components
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
@@ -36,21 +40,22 @@ export default {
 
     return {
       count,
-      inc,
-      elementStyles
+      inc
     };
 
   },
   data: function () {
     return {
-      message: "Test"
+      message: "Test lucas"
     };
   },
   components: {
     Header: Header,
     Footer: Footer,
     Content: Content,
-    Aside: Aside
+    Aside: Aside,
+    Main: Main,
+    Element, Element
   }
 }
 </script>

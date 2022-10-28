@@ -1,15 +1,18 @@
 <template>
     <component :is="tag" :id="id" :class="class">componente teste</component>
+    <p>test</p>
 </template>
 
 <script>
+
+import { ref } from 'vue';
 
 import elementStyleAttrs from '../../app/extract/elementStyleAttrs.js';
 
 export default {
     props: [
         'id',
-        'class',
+        'class', 
         'tag'
     ],
     data: function(){
@@ -17,7 +20,8 @@ export default {
         };
     },
     setup: function () {
-        const style = ref(elementStyleAttrs());
+        var style = ref(elementStyleAttrs());
+
         return {
             style
         };

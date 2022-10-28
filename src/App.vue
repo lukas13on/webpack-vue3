@@ -25,17 +25,21 @@ import Main from './components/Main.vue';
 import Content from './components/Content.vue';
 import Aside from './components/Aside.vue';
 
+
 export default {
   setup: function () {
-    const count = ref(0)
+    const count = ref(0);
+
     const inc = () => {
       count.value++
     }
 
     return {
       count,
-      inc
-    }
+      inc,
+      elementStyles
+    };
+
   },
   data: function () {
     return {

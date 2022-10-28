@@ -2,11 +2,7 @@
   <Header></Header>
   <Main> 
     <Content>
-      <img src="./assets/logo.png">
-      <h1>Hello Lucas !</h1>
-      <button @click="inc">Clicked {{ count }} times.</button>
-      <p>{{ message }}</p>
-      <Element id="hmm" tag="div" class="test"></Element>
+      <Editor></Editor>
     </Content>
   </Main>
   <Aside></Aside>
@@ -17,7 +13,7 @@
 import { ref } from 'vue';
 
 // test
-import Element from './components/editor/Element.vue';
+import Element from './components/editor/components/Element.vue';
 
 // Css
 import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -28,6 +24,7 @@ import Footer from './components/Footer.vue';
 import Main from './components/Main.vue';
 import Content from './components/Content.vue';
 import Aside from './components/Aside.vue';
+import Editor from './components/editor/Editor.vue';
 
 
 export default {
@@ -55,7 +52,8 @@ export default {
     Content: Content,
     Aside: Aside,
     Main: Main,
-    Element, Element
+    Element, Element,
+    Editor: Editor
   }
 }
 </script>

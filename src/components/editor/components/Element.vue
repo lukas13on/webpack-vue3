@@ -56,7 +56,7 @@ export default {
             return this.id ? this.id : '';
         },
         computedTag: function () {
-            return this.tag ? this.tag : '';
+            return this.tag ? this.tag : 'div';
         }
     }
 }

@@ -12274,19 +12274,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _editor_components_Element_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../editor/components/Element.vue */ "./src/components/editor/components/Element.vue");
 
 
-var tree = {
-    label: "A cool folder",
-    children: [
-        {
-            label: "A cool sub-folder 1",
-            children: [
-                { label: "A cool sub-sub-folder 1" },
-                { label: "A cool sub-sub-folder 2" }
-            ]
-        },
-        { label: "This one is not that cool" }
-    ]
-};
+var tree = [
+    {
+        label: "A cool folder",
+        children: [
+            {
+                label: "A cool sub-folder 1",
+                children: [
+                    {
+                        label: "A cool sub-sub-folder 2",
+                        children: [
+                            { label: "This one is not that cool" },
+                            { label: "This one is not that cool" }
+                        ]
+                    },
+                    { label: "A cool sub-sub-folder 3" }
+                ]
+            },
+            { label: "This one is not that prelast" }
+        ]
+    },
+    { label: "This one is not that last" }
+];
 
 
 
@@ -12294,7 +12303,7 @@ var tree = {
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function () {
         return {
-            tree:tree,
+            nodes: tree,
             data: {
                 content: [
                     {
@@ -12409,7 +12418,7 @@ __webpack_require__.r(__webpack_exports__);
             return this.id ? this.id : '';
         },
         computedTag: function () {
-            return this.tag ? this.tag : '';
+            return this.tag ? this.tag : 'div';
         }
     }
 });
@@ -12646,10 +12655,41 @@ __webpack_require__.r(__webpack_exports__);
 const _hoisted_1 = { id: "editor" }
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_Tree = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Tree")
+  const _component_Element = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Element")
 
   return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_1, [
-    Object(vue__WEBPACK_IMPORTED_MODULE_0__["createVNode"])(_component_Tree, { data: _ctx.tree }, null, 8 /* PROPS */, ["data"])
+    (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(_ctx.nodes, (e01, i01) => {
+      return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, { key: i01 }, {
+        default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+          Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])(e01.label) + " ", 1 /* TEXT */),
+          (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(e01.children, (e02, i02) => {
+            return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, { key: i02 }, {
+              default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+                Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])(e02.label) + " ", 1 /* TEXT */),
+                (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(e02.children, (e03, i03) => {
+                  return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, { key: i03 }, {
+                    default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+                      Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])(e03.label) + " ", 1 /* TEXT */),
+                      (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(e03.children, (e04, i04) => {
+                        return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, { key: i04 }, {
+                          default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+                            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])(e04.label), 1 /* TEXT */)
+                          ]),
+                          _: 2 /* DYNAMIC */
+                        }, 1024 /* DYNAMIC_SLOTS */))
+                      }), 128 /* KEYED_FRAGMENT */))
+                    ]),
+                    _: 2 /* DYNAMIC */
+                  }, 1024 /* DYNAMIC_SLOTS */))
+                }), 128 /* KEYED_FRAGMENT */))
+              ]),
+              _: 2 /* DYNAMIC */
+            }, 1024 /* DYNAMIC_SLOTS */))
+          }), 128 /* KEYED_FRAGMENT */))
+        ]),
+        _: 2 /* DYNAMIC */
+      }, 1024 /* DYNAMIC_SLOTS */))
+    }), 128 /* KEYED_FRAGMENT */))
   ]))
 }
 
@@ -12728,12 +12768,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
             node: child,
             key: index
-          }, {
-            default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
-              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])(child.label), 1 /* TEXT */)
-            ]),
-            _: 2 /* DYNAMIC */
-          }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["node"]))
+          }, null, 8 /* PROPS */, ["node"]))
         }), 128 /* KEYED_FRAGMENT */))
       ]))
     : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)

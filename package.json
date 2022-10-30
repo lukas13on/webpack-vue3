@@ -1,7 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "webpack": "npx webpack"
+    "serve-webpack": "npx webpack",
+    "serve-dist": "nodemon src/serve-static.js --delay 1",
+    "dev": "concurrently --kill-others \"npm run serve-webpack\" \"npm run serve-dist\"",
+    "start": "node ./bin/www",
+    "watch": "nodemon"
   },
   "dependencies": {
     "@webpack-cli/serve": "^1.7.0",
@@ -10,9 +14,14 @@
   },
   "devDependencies": {
     "@vue/compiler-sfc": "^3.0.0-beta.3",
+    "concurrently": "^7.5.0",
+    "connect-livereload": "^0.6.1",
     "css-loader": "^3.5.2",
+    "express": "^4.18.2",
     "file-loader": "^6.0.0",
+    "livereload": "^0.9.3",
     "mini-css-extract-plugin": "^0.9.0",
+    "nodemon": "^2.0.20",
     "url-loader": "^4.1.0",
     "vue-loader": "^16.0.0-alpha.3",
     "webpack": "^4.42.1",

@@ -8,7 +8,7 @@
 export default {
     data: function () {
         return {
-            message: 'Cabeçalhoaasssaaa'
+            message: 'Lucas de oliveira'
         };
     }
 }

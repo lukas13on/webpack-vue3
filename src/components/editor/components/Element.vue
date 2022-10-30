@@ -1,63 +1,40 @@
 <template>
-    <component :is="computedTag" :id="computedId" :class="computedClass" :style="computedStyles">
-        <slot></slot>
-    </component>
-</template>
-
-<script>
-
-import { ref } from 'vue';
-
-import elementStyleAttrs from '../../../app/extract/elementStyleAttrs.js';
-
-export default {
-    props: [
-        'id',
-        'class',
-        'tag',
-        'styles'
-    ],
-    data: function () {
-        return {
-        };
+    <div class="wrapperDivFromVueComponent">
+      <div :id="'htmlForId' + content.id">
+        <template v-if="content.content.length">
+          <!-- <div v-html="pagecontent.html"></div> -->
+          <Element
+            v-for="(content, index) in content.content"
+            :key="index"
+            :content="content"
+          ></Element>
+        </template>
+        <!-- <template v-else>
+          <div v-html="pagecontent.html"></div>
+        </template> -->
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+    name: "Element",
+    props: ["content"],
+    data() {
+      return {};
     },
-    computed: {
-        computedStyles: function () {
-
-            if (this.styles === undefined) { 
-                return {};
-            }
-
-            const standard = elementStyleAttrs();
-            const styles = {};
-            var total = Object.keys(this.styles).length;
-            var processed = 0;
-            var ignored = 0;
-            var ignoreds = [];
-
-            for (var attribute in this.styles) {
-                if (standard.indexOf(attribute) !== -1) {
-                    styles[attribute] = this.styles[attribute];
-                    processed++;
-                } else {
-                    ignoreds.push(attribute);
-                    console.warn('Ignored incompatible style attribute: ' + attribute);
-                }
-            }
-
-            ignored = total - processed;
-
-            return styles;
-        },
-        computedClass: function () {
-            return this.class ? this.class : '';
-        },
-        computedId: function () {
-            return this.id ? this.id : '';
-        },
-        computedTag: function () {
-            return this.tag ? this.tag : 'div';
-        }
-    }
-}
-</script>
+    components: {
+      Element: import("./Element.vue"),
+    },
+    created() {
+      console.log(this.content.id);
+    },
+  };
+  </script>
+  <style>
+  .wrapperDivFromVueComponent {
+    padding: 20px;
+    margin: 5px;
+    border: 1px solid #ff0000;
+  }
+  </style>

@@ -1,12 +1,22 @@
 <template>
-  <Header></Header>
-  <Main> 
-    <Content>
-      <Editor></Editor>
-    </Content>
-  </Main>
-  <Aside></Aside>
-  <Footer></Footer>
+  <div class="container-fluid">
+    <div class="row">
+      <Header></Header>
+      <Aside>
+        <Widgets>
+          <Widget>
+            <Layers></Layers>
+          </Widget>
+        </Widgets>
+      </Aside>
+      <Main>
+        <Content>
+          <Editor></Editor>
+        </Content>
+      </Main>
+      <Footer></Footer>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -17,14 +27,21 @@ import Element from './components/editor/components/Element.vue';
 
 // Css
 import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.min.css';
- 
-// Components
+
+// level 1 - Components
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import Main from './components/Main.vue';
-import Content from './components/Content.vue';
 import Aside from './components/Aside.vue';
+
+// level 2 - Components
+import Content from './components/Content.vue';
+import Widgets from './components/editor/components/Widgets.vue';
+
+// level 3 - Components
+import Widget from './components/editor/components/Widget.vue';
 import Editor from './components/editor/Editor.vue';
+import Layers from './components/editor/components/widgets/Layers.vue'
 
 
 export default {
@@ -53,7 +70,10 @@ export default {
     Aside: Aside,
     Main: Main,
     Element, Element,
-    Editor: Editor
+    Editor: Editor,
+    Widgets: Widgets,
+    Widget: Widget,
+    Layers: Layers
   }
 }
 </script>

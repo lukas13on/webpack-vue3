@@ -1,6 +1,6 @@
 <template>
-    <aside>
-        <p>{{message}}</p>
+    <aside class="col-3 bg-dark text-white">
+        <slot></slot>
     </aside>
 </template>
 

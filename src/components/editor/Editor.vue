@@ -1,5 +1,5 @@
 <template>
-    <div id="editor">
+    <div id="editor-main">
         <Element v-for="(value, key, index) in list" :key="index" :content="value">
         </Element>
     </div>
@@ -13,44 +13,56 @@ const list = [
         content: [
             {
                 content: [],
-                html: "Text 1",
+                text: "Text 1",
                 id: 2,
+                style: {
+                    backgroundColor: "green"
+                }
             },
             {
                 content: [
                     {
                         content: [],
-                        html: "Text 2",
+                        text: "Text 2",
                         id: 4,
+                        style: {
+                    backgroundColor: "yellow"
+                }
                     },
                 ],
-                html: "Level 2",
+                text: "Level 2",
                 id: 3,
+                style: {
+                    backgroundColor: "blue"
+                }
             },
         ],
-        html: "Level 1",
+        text: "Level 1",
         id: 1,
+        style: {
+            backgroundColor: "red"
+        }
     },
     {
         content: [
             {
                 content: [],
-                html: "Text 1",
+                text: "Text 1",
                 id: 2,
             },
             {
                 content: [
                     {
                         content: [],
-                        html: "Text 2",
+                        text: "Text 2",
                         id: 4,
                     },
                 ],
-                html: "Level 2",
+                text: "Level 2",
                 id: 3,
             },
         ],
-        html: "Level 1",
+        text: "Level 1",
         id: 1,
     },
 ];

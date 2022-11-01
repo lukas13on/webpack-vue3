@@ -1,10 +1,8 @@
 <template>
-    <div class="widget-layers">
-        <h3>Camadas</h3>
-        <ul class="layers">
-            <Layer v-for="(value, key, index) in list" :key="index" :content="value">
-            </Layer>
-        </ul>
+    <h2>Camadas</h2>
+    <div class="accordion">
+        <Layer v-for="(value, key, index) in list" :key="index" :content="value">
+        </Layer>
     </div>
 </template>
 
@@ -19,6 +17,7 @@ const list = [
                 content: [],
                 html: "Text 1",
                 id: 2,
+                collapse: false
             },
             {
                 content: [
@@ -26,14 +25,17 @@ const list = [
                         content: [],
                         html: "Text 2",
                         id: 4,
+                        collapse: false
                     },
                 ],
                 html: "Level 2",
                 id: 3,
+                collapse: false
             },
         ],
-        html: "Level 1",
+        html: "Level 1/1",
         id: 1,
+        collapse: true
     },
     {
         content: [
@@ -41,6 +43,7 @@ const list = [
                 content: [],
                 html: "Text 1",
                 id: 2,
+                collapse: false
             },
             {
                 content: [
@@ -48,14 +51,17 @@ const list = [
                         content: [],
                         html: "Text 2",
                         id: 4,
+                        collapse: false
                     },
                 ],
                 html: "Level 2",
                 id: 3,
+                collapse: false
             },
         ],
-        html: "Level 1",
+        html: "Level 1/2",
         id: 1,
+        collapse: false
     },
 ];
 

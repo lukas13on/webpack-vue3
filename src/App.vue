@@ -7,6 +7,9 @@
           <Widget>
             <Layers></Layers>
           </Widget>
+          <Widget>
+            <Attributes></Attributes>
+          </Widget>
         </Widgets>
       </Aside>
       <Main>
@@ -26,7 +29,7 @@ import { ref } from 'vue';
 import Element from './components/editor/components/Element.vue';
 
 // Css
-import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.css';
 
 // level 1 - Components
 import Header from './components/Header.vue';
@@ -41,7 +44,10 @@ import Widgets from './components/editor/components/Widgets.vue';
 // level 3 - Components
 import Widget from './components/editor/components/Widget.vue';
 import Editor from './components/editor/Editor.vue';
-import Layers from './components/editor/components/widgets/Layers.vue'
+
+// level 4 - components
+import Layers from './components/editor/components/widgets/Layers.vue';
+import Attributes from './components/editor/components/widgets/Attributes.vue';
 
 
 export default {
@@ -73,7 +79,8 @@ export default {
     Editor: Editor,
     Widgets: Widgets,
     Widget: Widget,
-    Layers: Layers
+    Layers: Layers,
+    Attributes: Attributes
   }
 }
 </script>

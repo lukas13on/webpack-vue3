@@ -1,7 +1,8 @@
 <template>
-  <div class="element">
+  <div class="element" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
+    {{content.text}}
     <template v-if="content.content.length">
-      <Element v-for="(content, index) in content.content" :key="index" :content="content"
+      <Element v-for="(content, index) in content.content" :key="index" :is="computedTag(content)" :content="content"
         :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
       </Element>
     </template>
@@ -18,6 +19,9 @@ export default {
     return {};
   },
   methods: {
+    jsonData: function (a) {
+      return JSON.stringify(a)
+    },
     computedStyle: function (content) {
 
       if (content.style === undefined) {
@@ -46,10 +50,10 @@ export default {
       return styles;
     },
     computedClass: function (content) {
-      return content.class ? this.class : '';
+      return content.class ? this.class : false;
     },
     computedId: function (content) {
-      return content.id ? this.id : '';
+      return content.id ? this.id : false;
     },
     computedTag: function (content) {
       return content.tag ? this.tag : 'div';

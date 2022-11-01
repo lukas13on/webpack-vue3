@@ -1,5 +1,21 @@
 <template>
-    <template v-if="content.content.length">
+  <div class="accordion-item mb-1">
+    <h2 class="accordion-header">
+      <button :class="accordionButtonClass" @click="collapseContent">{{ content.html }}</button>
+    </h2>
+    <div :class="accordionCollapseClass">
+      <div class="accordion-body">
+        <template v-if="content.content.length">
+          <Layer v-for="(content, index) in content.content" :key="index" :content="content">
+          </Layer>
+        </template>
+        <template v-else>
+          <button class="btn btn-block btn-light w-100">{{ content.html }}</button>
+        </template>
+      </div>
+    </div>
+  </div>
+  <!-- <template v-if="content.content.length">
       <li>
         <span>{{content.html}}</span>
         <ul>
@@ -10,18 +26,39 @@
     </template>
     <template v-else>
       <li><span>{{content.html}}</span></li>
-    </template>
+    </template> -->
 </template>
   
 <script>
 export default {
-  name: "Layer",
-  props: ["content"],
+  name: 'Layer',
+  props: ['content'],
   data() {
-    return {};
+    return {
+      collapse:false
+    };
+  },
+  methods: {
+    collapseContent: function () {
+      this.collapse = this.collapse ? false : true;
+    }
+  },
+  computed: {
+    accordionCollapseClass: function () {
+      var that = this;
+      var standard = 'accordion-collapse';
+      console.log(that.content)
+      return this.collapse === true ? standard + ' show' : standard + ' collapse';
+    },
+    accordionButtonClass: function () {
+      var that = this;
+      var standard = 'accordion-button';
+      console.log(that.content)
+      return this.collapse === true ? standard : standard + ' collapsed';
+    }
   },
   components: {
-    Layer: import("./Layer.vue"),
+    Layer: import('./Layer.vue'),
   },
   created() {
     console.log(this.content.id);

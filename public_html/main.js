@@ -13202,7 +13202,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const list = [
+const lista = [
     {
         content: [
             {
@@ -13279,8 +13279,7 @@ function flatten(items) {
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function () {
         return {
-            test:  flatten(list),
-            list: list,
+            list: flatten(lista),
             data: {
                 content: [
                     {

@@ -9,7 +9,7 @@
 import {v4 as uuidv4} from 'uuid';
 import Element from '../editor/components/Element.vue';
 
-const list = [
+const lista = [
     {
         content: [
             {
@@ -86,8 +86,7 @@ function flatten(items) {
 export default {
     data: function () {
         return {
-            test:  flatten(list),
-            list: list,
+            list: flatten(lista),
             data: {
                 content: [
                     {

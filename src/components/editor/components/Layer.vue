@@ -1,7 +1,7 @@
 <template>
   <div class="accordion-item mb-1">
     <h2 class="accordion-header">
-      <button :class="accordionButtonClass" @click="collapseContent">{{ content.html }}</button>
+      <button :class="accordionButtonClass" @click="handleButtonClick(content, collapse)">{{ content.text }}</button>
     </h2>
     <div :class="accordionCollapseClass">
       <div class="accordion-body">
@@ -10,23 +10,11 @@
           </Layer>
         </template>
         <template v-else>
-          <button class="btn btn-block btn-light w-100">{{ content.html }}</button>
+          <button class="btn btn-block btn-light w-100">{{ content.text }}</button>
         </template>
       </div>
     </div>
   </div>
-  <!-- <template v-if="content.content.length">
-      <li>
-        <span>{{content.html}}</span>
-        <ul>
-          <Layer v-for="(content, index) in content.content" :key="index" :content="content">
-          </Layer>
-        </ul>
-      </li>
-    </template>
-    <template v-else>
-      <li><span>{{content.html}}</span></li>
-    </template> -->
 </template>
   
 <script>
@@ -39,6 +27,16 @@ export default {
     };
   },
   methods: {
+    handleButtonClick: function (content, collapse) {
+      if (!collapse) {
+        console.log('sent-attributes-content', 'collapsed');
+        this.$emitter.emit('sent-attributes-content', content);
+      } else {
+        console.log('sent-attributes-content','collapse');
+        this.$emitter.emit('sent-attributes-content', {});
+      }
+      this.collapseContent();
+    },
     collapseContent: function () {
       this.collapse = this.collapse ? false : true;
     }
@@ -47,13 +45,11 @@ export default {
     accordionCollapseClass: function () {
       var that = this;
       var standard = 'accordion-collapse';
-      console.log(that.content)
       return this.collapse === true ? standard + ' show' : standard + ' collapse';
     },
     accordionButtonClass: function () {
       var that = this;
       var standard = 'accordion-button';
-      console.log(that.content)
       return this.collapse === true ? standard : standard + ' collapsed';
     }
   },

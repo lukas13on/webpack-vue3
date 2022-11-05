@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {v4 as uuidv4} from 'uuid';
 import Element from '../editor/components/Element.vue';
 
 const list = [
@@ -26,8 +27,8 @@ const list = [
                         text: "Text 2",
                         id: 4,
                         style: {
-                    backgroundColor: "yellow"
-                }
+                            backgroundColor: "yellow"
+                        }
                     },
                 ],
                 text: "Level 2",
@@ -38,7 +39,6 @@ const list = [
             },
         ],
         text: "Level 1",
-        id: 1,
         style: {
             backgroundColor: "red"
         }
@@ -67,9 +67,26 @@ const list = [
     },
 ];
 
+function flatten(items) {
+    console.log(items);
+    const flat = [];
+
+    items.forEach(item => {
+        if (Array.isArray(item)) {
+            flat.push(...flatten(item));
+        } else {
+            item.uuid = uuidv4();
+            flat.push(item);
+        }
+    });
+
+    return flat;
+}
+
 export default {
     data: function () {
         return {
+            test:  flatten(list),
             list: list,
             data: {
                 content: [

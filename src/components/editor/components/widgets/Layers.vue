@@ -15,53 +15,57 @@ const list = [
         content: [
             {
                 content: [],
-                html: "Text 1",
+                text: "Text 1",
                 id: 2,
-                collapse: false
+                style: {
+                    backgroundColor: "green"
+                }
             },
             {
                 content: [
                     {
                         content: [],
-                        html: "Text 2",
+                        text: "Text 2",
                         id: 4,
-                        collapse: false
+                        style: {
+                    backgroundColor: "yellow"
+                }
                     },
                 ],
-                html: "Level 2",
+                text: "Level 2",
                 id: 3,
-                collapse: false
+                style: {
+                    backgroundColor: "blue"
+                }
             },
         ],
-        html: "Level 1/1",
+        text: "Level 1",
         id: 1,
-        collapse: true
+        style: {
+            backgroundColor: "red"
+        }
     },
     {
         content: [
             {
                 content: [],
-                html: "Text 1",
+                text: "Text 1",
                 id: 2,
-                collapse: false
             },
             {
                 content: [
                     {
                         content: [],
-                        html: "Text 2",
+                        text: "Text 2",
                         id: 4,
-                        collapse: false
                     },
                 ],
-                html: "Level 2",
+                text: "Level 2",
                 id: 3,
-                collapse: false
             },
         ],
-        html: "Level 1/2",
+        text: "Level 1",
         id: 1,
-        collapse: false
     },
 ];
 

@@ -2,14 +2,14 @@
   "private": true,
   "scripts": {
     "serve-webpack": "npx webpack",
-    "serve-dist": "nodemon src/serve-static.js --delay 1",
-    "dev": "concurrently --kill-others \"npm run serve-webpack\" \"npm run serve-dist\"",
-    "start": "node ./bin/www",
-    "watch": "nodemon"
+    "serve-static": "nodemon src/serve-static.js",
+    "dev": "concurrently --kill-others \"npm run serve-webpack\" \"npm run serve-static\""
   },
   "dependencies": {
     "@webpack-cli/serve": "^1.7.0",
     "bootstrap": "^5.2.2",
+    "mitt": "^3.0.0",
+    "uuid": "^9.0.0",
     "vue": "^3.0.0-beta.3"
   },
   "devDependencies": {

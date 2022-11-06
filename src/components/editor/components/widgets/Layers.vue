@@ -1,7 +1,7 @@
 <template>
     <h2>Camadas</h2>
     <div class="accordion">
-        <Layer v-for="(value, key, index) in list" :key="index" :content="value">
+        <Layer v-for="(value, key, index) in content" :key="index" :content="value">
         </Layer>
     </div>
 </template>
@@ -72,8 +72,17 @@ const list = [
 export default {
     data: function () {
         return {
-            list: list
+            content: []
         };
+    },
+    mounted: function () { 
+        this.$emitter.on('sent-editor-content', this.receiveEditorContent);
+    },
+    methods: {
+        receiveEditorContent: function (data) {
+            this.content = data;
+            console.log(data);
+        },  
     },
     components: {
         Widget: Widget,

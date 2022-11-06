@@ -12,7 +12,7 @@ function elementStyleAttrs(element) {
             if (attribute.indexOf('webkit') === -1 &&
                 attribute.indexOf('moz') === -1 &&
                 attribute.indexOf('ms') === -1) {
-                attributes.push(attribute);
+                attributes.push(String(attribute));
                 //attributes[attribute] = '';
             }
         }

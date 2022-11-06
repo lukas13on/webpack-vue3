@@ -1,5 +1,5 @@
 <template>
-    <aside class="col-3">
+    <aside class="col-3 bg-light">
         <slot></slot>
     </aside>
 </template>

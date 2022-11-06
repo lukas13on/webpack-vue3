@@ -32,9 +32,11 @@ export default {
         console.log('sent-attributes-content', 'collapsed');
         this.$emitter.emit('sent-attributes-content', content);
       } else {
+        content = {};
         console.log('sent-attributes-content','collapse');
-        this.$emitter.emit('sent-attributes-content', {});
+        this.$emitter.emit('sent-attributes-content', content);
       }
+      console.log(content);
       this.collapseContent();
     },
     collapseContent: function () {

@@ -1,0 +1,102 @@
+<template>
+    <div class="container-fluid">
+        <h3>Estilos</h3>
+        <div v-if="content.style">
+            <p>
+                <small>Selecionado: {{ content.text }}</small>
+            </p>
+            <h4>Adicionar estilo</h4>
+            <div class="row">
+                <div class="form-group col-auto">
+                    <select class="form-control" v-model="add.valueId">
+                        <option disabled :value="null">Selecione uma opção</option>
+                        <option v-for="(value, index) in add.valueIds" v-bind:value="value">{{ value }}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input class="form-control" v-model="add.value" />
+                </div>
+                <div class="form-group col-auto">
+                    <button class="btn btn-primary" @click="adicionar">Adicionar</button>
+                </div>
+            </div>
+            <h4>Estilos adicionados</h4>
+            <div class="row">
+                <div class="form-group col-12" v-for="(value, key, index) in content.style" :key="index"
+                    v-show="showAttribute(key)">
+                    <label>{{ key }}</label>
+                    <input type="text" class="form-control" v-model="content.style[key]" :placeholder="value"/>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <p>
+                <small>Selecione uma camada</small>
+            </p>
+        </div>
+    </div>
+</template>
+
+<script>
+import elementStyleAttrs from '../../../../app/extract/elementStyleAttrs';
+
+export default {
+    data: function () {
+        return {
+            content: {
+                style: null,
+                collapse: false
+            },
+            add: {
+                valueIds: elementStyleAttrs(),
+                valueId: null,
+                value: null
+            }
+        };
+    },
+    mounted: function () {
+        var that = this;
+        console.log(that);
+        this.$emitter.on('sent-attributes-content', this.receiveElementData);
+        console.log('elementStyleAttrs', elementStyleAttrs());
+    },
+    methods: {
+        adicionar: function () {
+            var valueId = this.add.valueId;
+            var value = this.add.value;
+            var actual = this.content.style[valueId];
+            this.content.style[valueId] = value;
+            this.handdleContentChange();
+            console.log(valueId, value, actual)
+        },
+        handdleContentChange: function () {
+            console.log('sent-changed-content');
+            this.$emitter.emit('sent-changed-content', this.content);
+        },
+        keyup: function (val) {
+            console.log(val)
+        },
+        testar: function (a) {
+            console.dir(a);
+        },
+        test: function (key) {
+            var value = this.content.style[key];
+            //console.log(value);
+            return value;
+        },
+        showAttribute: function (key) {
+            //console.log(key);
+            var value = this.content.style[key];
+            //console.log(value);
+            if (this.content.style !== undefined && this.content.style[key] !== null) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        receiveElementData: function (data) {
+            this.content = data;
+        }
+    }
+};
+</script>

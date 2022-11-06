@@ -47,7 +47,7 @@ import Editor from './components/editor/Editor.vue';
 
 // level 4 - components
 import Layers from './components/editor/components/widgets/Layers.vue';
-import Attributes from './components/editor/components/widgets/Attributes.vue';
+import Attributes from './components/editor/components/widgets/Styles.vue';
 
 
 export default {

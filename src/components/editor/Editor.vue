@@ -1,12 +1,12 @@
 <template>
     <div id="editor-main">
-        <Element v-for="(value, key, index) in list" :key="index" :content="value">
+        <Element v-for="(value, key, index) in content" :key="index" :content="value">
         </Element>
     </div>
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import Element from '../editor/components/Element.vue';
 
 const lista = [
@@ -83,51 +83,45 @@ function flatten(items) {
     return flat;
 }
 
+function fidden(items, _item) {
+    console.log(items);
+    const flat = [];
+
+    items.forEach(item => {
+
+        if (!Array.isArray(item)) {
+            if (item.uuid !== _item.uuid) {
+                //console.log('not located');
+                flat.push(item);
+            } else {
+                flat.push(_item);
+                //console.log('located');
+            }
+        } else {
+            flat.push(...fidden(item));
+        }
+
+
+    });
+
+    return flat;
+}
+
 export default {
     data: function () {
         return {
-            list: flatten(lista),
-            data: {
-                content: [
-                    {
-                        tag: 'div',
-                        class: 'button-sample',
-                        text: 'Et consequat fugiat consectetur culpa mollit.',
-                        styles: {
-                            textAlign: 'center'
-                        },
-                        content: [
-                            {
-                                tag: 'div',
-                                content: [
-                                    {
-                                        tag: 'button',
-                                        class: 'button-sample',
-                                        text: 'Clique aqui',
-                                        styles: {
-                                            fontSize: '16px',
-                                            color: 'red',
-                                            border: '1px solid red'
-                                        }
-                                    },
-                                    {
-                                        tag: 'button',
-                                        class: 'button-sample',
-                                        text: 'Sair daqui',
-                                        styles: {
-                                            fontSize: '32px',
-                                            color: 'red',
-                                            border: '1px solid red'
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-
-            }
+            content: flatten(lista),
         };
+    },
+    mounted: function () {
+        this.$emitter.emit('sent-editor-content', this.content);
+        this.$emitter.on('sent-changed-content', this.receivedChangedContents);
+    },
+    methods: {
+        receivedChangedContents: function (content) {
+            console.log('receivedChangedContents', content);
+            this.content = fidden(this.content, content);
+        }
     },
     components: {
         Element: Element

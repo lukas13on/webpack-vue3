@@ -1,5 +1,19 @@
 <template>
     <h2>Camadas</h2>
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="form-group row">
+                    <div class="col my-auto">
+                        <label><b>Camada principal</b></label>
+                    </div>
+                    <div class="col-auto my-auto">
+                        <button class="btn btn-primary w-100" @click="addNewLayer">Nova</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="accordion">
         <Layer v-for="(value, key, index) in content" :key="index" :content="value">
         </Layer>
@@ -7,67 +21,10 @@
 </template>
 
 <script>
+
+import { v4 as uuidv4 } from 'uuid';
 import Widget from '../Widget.vue';
 import Layer from '../Layer.vue';
-
-const list = [
-    {
-        content: [
-            {
-                content: [],
-                text: "Text 1",
-                id: 2,
-                style: {
-                    backgroundColor: "green"
-                }
-            },
-            {
-                content: [
-                    {
-                        content: [],
-                        text: "Text 2",
-                        id: 4,
-                        style: {
-                    backgroundColor: "yellow"
-                }
-                    },
-                ],
-                text: "Level 2",
-                id: 3,
-                style: {
-                    backgroundColor: "blue"
-                }
-            },
-        ],
-        text: "Level 1",
-        id: 1,
-        style: {
-            backgroundColor: "red"
-        }
-    },
-    {
-        content: [
-            {
-                content: [],
-                text: "Text 1",
-                id: 2,
-            },
-            {
-                content: [
-                    {
-                        content: [],
-                        text: "Text 2",
-                        id: 4,
-                    },
-                ],
-                text: "Level 2",
-                id: 3,
-            },
-        ],
-        text: "Level 1",
-        id: 1,
-    },
-];
 
 export default {
     data: function () {
@@ -75,14 +32,32 @@ export default {
             content: []
         };
     },
-    mounted: function () { 
+    mounted: function () {
         this.$emitter.on('sent-editor-content', this.receiveEditorContent);
     },
     methods: {
+        addNewLayer: function () { 
+            this.content.push({
+                text: 'Sem nome',
+                tag: '',
+                attribute: {
+                    id: "",
+                    class: "",
+                },
+                content: [],
+                style: {},
+                uuid: uuidv4()
+            });
+            this.sentEditorContent();
+        },
         receiveEditorContent: function (data) {
             this.content = data;
             console.log(data);
-        },  
+        },
+        sentEditorContent: function () { 
+            this.$emitter.emit('sent-editor-content', this.content);
+            console.log('emited');
+        }
     },
     components: {
         Widget: Widget,
@@ -90,3 +65,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+label {
+    display: block;
+    width: 100%;
+}
+</style>

@@ -10,6 +10,9 @@
           <Widget>
             <Attributes></Attributes>
           </Widget>
+          <Widget>
+            <Styles></Styles>
+          </Widget>
         </Widgets>
       </Aside>
       <Main>
@@ -47,7 +50,8 @@ import Editor from './components/editor/Editor.vue';
 
 // level 4 - components
 import Layers from './components/editor/components/widgets/Layers.vue';
-import Attributes from './components/editor/components/widgets/Styles.vue';
+import Styles from './components/editor/components/widgets/Styles.vue';
+import Attributes from './components/editor/components/widgets/Attributes.vue';
 
 
 export default {
@@ -80,6 +84,7 @@ export default {
     Widgets: Widgets,
     Widget: Widget,
     Layers: Layers,
+    Styles: Styles,
     Attributes: Attributes
   }
 }

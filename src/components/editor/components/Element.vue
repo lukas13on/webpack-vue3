@@ -1,6 +1,6 @@
 <template>
   <div class="element" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
-    {{content.text}}
+    {{computedText(content)}}
     <template v-if="content.content.length">
       <Element v-for="(content, index) in content.content" :key="index" :is="computedTag(content)" :content="content"
         :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
@@ -50,13 +50,16 @@ export default {
       return styles;
     },
     computedClass: function (content) {
-      return content.class ? this.class : false;
+      return content.attribute.class ? content.attribute.class : false;
     },
     computedId: function (content) {
-      return content.id ? this.id : false;
+      return content.attribute.id ? content.attribute.id : false;
     },
     computedTag: function (content) {
-      return content.tag ? this.tag : 'div';
+      return content.tag ? content.tag : 'div';
+    },
+    computedText: function (content) {
+      return content.text ? content.text : '';
     }
   },
   components: {

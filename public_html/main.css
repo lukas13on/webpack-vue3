@@ -10891,4 +10891,34 @@ textarea.form-control-lg {
 }
 
 
+.btn-light-outline[data-v-5cd84a7a] {
+  border-color: #dee2e6 !important;
+  border-radius: 0px;
+  padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
+  text-align: left;
+}
+.btn-light-outline.active[data-v-5cd84a7a] {
+  background-color: #e7f1ff;
+  color: #0c63e4;
+}
+.btn-light-outline[data-v-5cd84a7a]:focus {
+  z-index: 3;
+  border-color: var(--bs-accordion-btn-focus-border-color);
+  outline: 0;
+  box-shadow: var(--bs-accordion-btn-focus-box-shadow);
+}
+
+
+label[data-v-0353136e] {
+    display: block;
+    width: 100%;
+}
+
+
+label[data-v-aac82f44]{
+        display:block;
+        width:100%;
+}
+
+
 /*# sourceMappingURL=main.css.map*/

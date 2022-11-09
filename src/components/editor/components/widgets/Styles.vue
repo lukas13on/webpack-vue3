@@ -1,20 +1,18 @@
 <template>
-    <div class="container-fluid">
-        <h3>Estilos</h3>
-        <div v-if="content.style">
-            <p>
-                <small>Selecionado: {{ content.text }}</small>
-            </p>
+    <h3>Estilos</h3>
+    <div v-if="content.uuid" class="card">
+        <div class="card-body">
             <h4>Adicionar estilo</h4>
             <div class="row">
                 <div class="form-group col-auto">
-                    <select class="form-control" v-model="add.valueId">
+                    <select class="form-control" v-model="add.valueId" @change="changedValueId(add.valueId)">
                         <option disabled :value="null">Selecione uma opção</option>
                         <option v-for="(value, index) in add.valueIds" v-bind:value="value">{{ value }}</option>
                     </select>
                 </div>
                 <div class="col">
-                    <input class="form-control" v-model="add.value" />
+                    <input v-if="add.color" type="color" class="form-control" v-model="add.value" />
+                    <input v-else class="form-control" type="text" v-model="add.value" />
                 </div>
                 <div class="form-group col-auto">
                     <button class="btn btn-primary" @click="adicionar">Adicionar</button>
@@ -25,11 +23,15 @@
                 <div class="form-group col-12" v-for="(value, key, index) in content.style" :key="index"
                     v-show="showAttribute(key)">
                     <label>{{ key }}</label>
-                    <input type="text" class="form-control" v-model="content.style[key]" :placeholder="value"/>
+                    <input v-if="attributeColor(key)" type="color" class="form-control" v-model="content.style[key]"
+                        :placeholder="value" />
+                    <input v-else type="text" class="form-control" v-model="content.style[key]" :placeholder="value" />
                 </div>
             </div>
         </div>
-        <div v-else>
+    </div>
+    <div v-else class="card">
+        <div class="card-body">
             <p>
                 <small>Selecione uma camada</small>
             </p>
@@ -49,6 +51,7 @@ export default {
             },
             add: {
                 valueIds: elementStyleAttrs(),
+                color: false,
                 valueId: null,
                 value: null
             }
@@ -64,6 +67,9 @@ export default {
         adicionar: function () {
             var valueId = this.add.valueId;
             var value = this.add.value;
+            if (typeof this.content.style !== 'object') {
+                this.content.style = {};
+            }
             var actual = this.content.style[valueId];
             this.content.style[valueId] = value;
             this.handdleContentChange();
@@ -92,6 +98,20 @@ export default {
                 return true;
             } else {
                 return false;
+            }
+        },
+        attributeColor: function (key) {
+            if (key.toLowerCase().indexOf('color') !== -1) {
+                return true;
+            } else {
+                return false.valueOf;
+            }
+        },
+        changedValueId: function (valueId) {
+            if (this.attributeColor(valueId)) {
+                this.add.color = true;
+            } else {
+                this.add.color = false;
             }
         },
         receiveElementData: function (data) {

@@ -12,58 +12,17 @@ import Element from '../editor/components/Element.vue';
 const lista = [
     {
         content: [
-            {
-                content: [],
-                text: "Text 1",
-                id: 2,
-                style: {
-                    backgroundColor: "green"
-                }
-            },
-            {
-                content: [
-                    {
-                        content: [],
-                        text: "Text 2",
-                        id: 4,
-                        style: {
-                            backgroundColor: "yellow"
-                        }
-                    },
-                ],
-                text: "Level 2",
-                id: 3,
-                style: {
-                    backgroundColor: "blue"
-                }
-            },
         ],
-        text: "Level 1",
+        text: "Sem nome",
+        attribute: {
+            id: "",
+            class: "",
+        },
+        tag: "",
         style: {
-            backgroundColor: "red"
+            backgroundColor: "#000000",
+            color:"#ffffff"
         }
-    },
-    {
-        content: [
-            {
-                content: [],
-                text: "Text 1",
-                id: 2,
-            },
-            {
-                content: [
-                    {
-                        content: [],
-                        text: "Text 2",
-                        id: 4,
-                    },
-                ],
-                text: "Level 2",
-                id: 3,
-            },
-        ],
-        text: "Level 1",
-        id: 1,
     },
 ];
 
@@ -81,6 +40,30 @@ function flatten(items) {
     });
 
     return flat;
+}
+
+function test(items) {
+    var res = [];
+    items.forEach(item => {
+        var _item = item;
+        _item.uuid = uuidv4();
+        var keys = Object.keys(item);
+        const index = keys.indexOf('content');
+        
+        keys.splice(index, 1); 
+        console.log(keys, index);
+        if (item.content && item.content.length > 0) { 
+            _item.content = [...test(item.content)];
+            res.push(_item);
+        } else {
+            //res.push(item);
+            for (var key of keys) { 
+                _item[key] = item[key];
+            }
+            res.push(_item);
+        }
+    });
+    return res;
 }
 
 function fidden(items, _item) {
@@ -110,17 +93,21 @@ function fidden(items, _item) {
 export default {
     data: function () {
         return {
-            content: flatten(lista),
+            content: test(lista),
         };
     },
     mounted: function () {
         this.$emitter.emit('sent-editor-content', this.content);
+        this.$emitter.on('sent-editor-content', this.receivedContent);
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
     },
     methods: {
         receivedChangedContents: function (content) {
             console.log('receivedChangedContents', content);
             this.content = fidden(this.content, content);
+        },
+        receivedContent: function (content) {
+            this.content = content;
         }
     },
     components: {

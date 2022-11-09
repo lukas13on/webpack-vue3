@@ -13721,7 +13721,7 @@ __webpack_require__.r(__webpack_exports__);
             if (key.toLowerCase().indexOf('color') !== -1) {
                 return true;
             } else {
-                return false.valueOf;
+                return false;
             }
         },
         changedValueId: function (valueId) {

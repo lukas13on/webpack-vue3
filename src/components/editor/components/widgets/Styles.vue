@@ -104,7 +104,7 @@ export default {
             if (key.toLowerCase().indexOf('color') !== -1) {
                 return true;
             } else {
-                return false.valueOf;
+                return false;
             }
         },
         changedValueId: function (valueId) {

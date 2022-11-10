@@ -1,32 +1,32 @@
 <template>
   <div class="accordion-item">
     <h2 class="accordion-header">
-      <button :class="accordionButtonClass(content)"
-        @click="handleButtonClick(content, collapse)">{{ content.text }}</button>
+      <button :class="accordionButtonClass(content)" @click="collapseContent">{{ content.label }}</button>
     </h2>
     <div :class="accordionCollapseClass(content)">
       <div class="px-4 py-2">
         <div class="form-group">
           <div class="form-group row">
             <div class="col my-auto">
-              <label><b>Camada: {{ content.text }}</b></label>
+              <input type="text" class="form-control" v-model="content.label" />
             </div>
             <div class="col-auto my-auto">
-              <button class="btn btn-primary w-100" @click="addNewLayer">Nova</button>
+              <button class="btn btn-info me-2" @click="handleButtonClick(content, collapse)">EDIT</button>
+              <button class="btn btn-danger me-2" @click="deleteLayer">DEL</button>
+              <button class="btn btn-primary" @click="addNewLayer">ADD</button>
             </div>
           </div>
         </div>
       </div>
       <div class="accordion-body" v-if="content.content.length > 0">
-          <Layer v-for="(content, index) in content.content" :key="index" :content="content">
-          </Layer>
+        <Layer v-for="(content, index) in content.content" :key="index" :content="content">
+        </Layer>
       </div>
     </div>
   </div>
 </template>
   
 <script>
-
 import { v4 as uuidv4 } from 'uuid';
 
 export default {
@@ -34,42 +34,31 @@ export default {
   props: ['content'],
   data() {
     return {
-      collapse: false
+      collapse: false,
     };
   },
   methods: {
     handleButtonClick: function (content, collapse) {
-      if (collapse !== undefined) {
-        if (!collapse) {
-          console.log('sent-attributes-content', 'collapsed');
-          this.$emitter.emit('sent-attributes-content', content);
-        } else {
-          content = {};
-          console.log('sent-attributes-content', 'collapse');
-          this.$emitter.emit('sent-attributes-content', content);
-        }
-        this.collapseContent();
-      } else {
-        this.$emitter.emit('sent-attributes-content', content);
-      }
-      console.log(content);
+      console.log('sent-attributes-content', 'collapsed');
+      this.$emitter.emit('sent-attributes-content', content);
     },
     collapseContent: function () {
       this.collapse = this.collapse ? false : true;
     },
     accordionButtonClass: function (content) {
-        var standard = 'accordion-button';
-        return this.collapse === true ? standard : standard + ' collapsed';
+      var standard = 'accordion-button';
+      return this.collapse === true ? standard : standard + ' collapsed';
     },
     accordionCollapseClass: function (content) {
-        var standard = 'accordion-collapse';
-        return this.collapse === true ? standard + ' show' : standard + ' collapse';
+      var standard = 'accordion-collapse';
+      return this.collapse === true ? standard + ' show' : standard + ' collapse';
     },
     addNewLayer: function () {
       var that = this;
       console.log(that)
       this.content.content.push({
-        text: 'Sem nome',
+        label: 'Sem nome',
+        text: '',
         tag: '',
         attribute: {
           id: "",
@@ -80,6 +69,10 @@ export default {
         uuid: uuidv4()
       });
       this.sentEditorContent();
+    },
+    deleteLayer: function () {
+      this.$emitter.emit('sent-remove-content', this.content);
+      this.$emitter.emit('sent-attributes-content', {});
     },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', this.content);

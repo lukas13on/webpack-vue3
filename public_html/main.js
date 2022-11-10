@@ -13248,7 +13248,8 @@ const lista = [
     {
         content: [
         ],
-        text: "Sem nome",
+        label: 'Sem nome',
+        text: "",
         attribute: {
             id: "",
             class: "",
@@ -13256,43 +13257,25 @@ const lista = [
         tag: "",
         style: {
             backgroundColor: "#000000",
-            color:"#ffffff"
+            color: "#ffffff"
         }
     },
 ];
 
-function flatten(items) {
-    console.log(items);
-    const flat = [];
-
-    items.forEach(item => {
-        if (Array.isArray(item)) {
-            flat.push(...flatten(item));
-        } else {
-            item.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])();
-            flat.push(item);
-        }
-    });
-
-    return flat;
-}
-
-function test(items) {
+function identifyContentItems(items) {
     var res = [];
-    items.forEach(item => {
+    items.forEach(function (item) {
         var _item = item;
         _item.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])();
         var keys = Object.keys(item);
         const index = keys.indexOf('content');
-        
-        keys.splice(index, 1); 
-        console.log(keys, index);
-        if (item.content && item.content.length > 0) { 
+        keys.splice(index, 1);
+        if (item.content && item.content.length > 0) {
             _item.content = [...test(item.content)];
             res.push(_item);
         } else {
             //res.push(item);
-            for (var key of keys) { 
+            for (var key of keys) {
                 _item[key] = item[key];
             }
             res.push(_item);
@@ -13301,47 +13284,69 @@ function test(items) {
     return res;
 }
 
-function fidden(items, _item) {
-    console.log(items);
+function replaceContentItem(items, _item) {
     const flat = [];
 
-    items.forEach(item => {
-
+    items.forEach(function (item) {
         if (!Array.isArray(item)) {
             if (item.uuid !== _item.uuid) {
-                //console.log('not located');
                 flat.push(item);
             } else {
                 flat.push(_item);
-                //console.log('located');
             }
         } else {
-            flat.push(...fidden(item));
+            flat.push(...replaceContentItem(item));
         }
-
-
     });
 
     return flat;
 }
 
+function removeContentItem(items, _item) {
+    const flat = [];
+
+    items.forEach(function (item) {
+        if (!Array.isArray(item)) {
+            if (item.uuid !== _item.uuid) {
+                flat.push(item);
+            }
+        } else {
+            flat.push(...removeContentItem(item));
+        }
+    });
+
+    return flat;
+}
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function () {
         return {
-            content: test(lista),
+            content: identifyContentItems(lista),
         };
     },
     mounted: function () {
         this.$emitter.emit('sent-editor-content', this.content);
         this.$emitter.on('sent-editor-content', this.receivedContent);
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
+        this.$emitter.on('sent-remove-content', this.removeContent);
     },
     methods: {
+        refreshContent: function () {
+            this.$emitter.emit('sent-editor-content', this.content);
+        },
         receivedChangedContents: function (content) {
-            console.log('receivedChangedContents', content);
-            this.content = fidden(this.content, content);
+            console.log('sent-changed-content', content);
+            this.content = replaceContentItem(this.content, content);
+            this.refreshContent();
+        },
+        removeContent: function (content) {
+            console.log('sent-remove-content', content);
+            this.content = removeContentItem(this.content, content);
+            this.refreshContent();
         },
         receivedContent: function (content) {
+            console.log('sent-editor-content', content);
             this.content = content;
         }
     },
@@ -13442,48 +13447,36 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Layer',
   props: ['content'],
   data() {
     return {
-      collapse: false
+      collapse: false,
     };
   },
   methods: {
     handleButtonClick: function (content, collapse) {
-      if (collapse !== undefined) {
-        if (!collapse) {
-          console.log('sent-attributes-content', 'collapsed');
-          this.$emitter.emit('sent-attributes-content', content);
-        } else {
-          content = {};
-          console.log('sent-attributes-content', 'collapse');
-          this.$emitter.emit('sent-attributes-content', content);
-        }
-        this.collapseContent();
-      } else {
-        this.$emitter.emit('sent-attributes-content', content);
-      }
-      console.log(content);
+      console.log('sent-attributes-content', 'collapsed');
+      this.$emitter.emit('sent-attributes-content', content);
     },
     collapseContent: function () {
       this.collapse = this.collapse ? false : true;
     },
     accordionButtonClass: function (content) {
-        var standard = 'accordion-button';
-        return this.collapse === true ? standard : standard + ' collapsed';
+      var standard = 'accordion-button';
+      return this.collapse === true ? standard : standard + ' collapsed';
     },
     accordionCollapseClass: function (content) {
-        var standard = 'accordion-collapse';
-        return this.collapse === true ? standard + ' show' : standard + ' collapse';
+      var standard = 'accordion-collapse';
+      return this.collapse === true ? standard + ' show' : standard + ' collapse';
     },
     addNewLayer: function () {
       var that = this;
       console.log(that)
       this.content.content.push({
-        text: 'Sem nome',
+        label: 'Sem nome',
+        text: '',
         tag: '',
         attribute: {
           id: "",
@@ -13494,6 +13487,10 @@ __webpack_require__.r(__webpack_exports__);
         uuid: Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])()
       });
       this.sentEditorContent();
+    },
+    deleteLayer: function () {
+      this.$emitter.emit('sent-remove-content', this.content);
+      this.$emitter.emit('sent-attributes-content', {});
     },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', this.content);
@@ -13616,7 +13613,8 @@ __webpack_require__.r(__webpack_exports__);
     methods: {
         addNewLayer: function () { 
             this.content.push({
-                text: 'Sem nome',
+                label: 'Sem nome',
+                text: '',
                 tag: '',
                 attribute: {
                     id: "",
@@ -14126,8 +14124,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("h2", _hoisted_2, [
       Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
         class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.accordionButtonClass($props.content)),
-        onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($props.content, $data.collapse)))
-      }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($props.content.text), 3 /* TEXT, CLASS */)
+        onClick: _cache[0] || (_cache[0] = (...args) => ($options.collapseContent && $options.collapseContent(...args)))
+      }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($props.content.label), 3 /* TEXT, CLASS */)
     ]),
     Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", {
       class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.accordionCollapseClass($props.content))
@@ -14136,15 +14134,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_4, [
           Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_5, [
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_6, [
-              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, [
-                Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("b", null, "Camada: " + Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($props.content.text), 1 /* TEXT */)
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                type: "text",
+                class: "form-control",
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($props.content.label) = $event))
+              }, null, 512 /* NEED_PATCH */), [
+                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], $props.content.label]
               ])
             ]),
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_7, [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
-                class: "btn btn-primary w-100",
-                onClick: _cache[1] || (_cache[1] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, "Nova")
+                class: "btn btn-info me-2",
+                onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($props.content, $data.collapse)))
+              }, "EDIT"),
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-danger me-2",
+                onClick: _cache[3] || (_cache[3] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
+              }, "DEL"),
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-primary",
+                onClick: _cache[4] || (_cache[4] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+              }, "ADD")
             ])
           ])
         ])

@@ -38,7 +38,8 @@ export default {
     methods: {
         addNewLayer: function () { 
             this.content.push({
-                text: 'Sem nome',
+                label: 'Sem nome',
+                text: '',
                 tag: '',
                 attribute: {
                     id: "",

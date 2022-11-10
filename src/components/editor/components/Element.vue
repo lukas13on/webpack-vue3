@@ -73,10 +73,7 @@ export default {
 };
 </script>
 <style>
-.element {
-    outline: 1px solid #0d6efd;
-}
 .element:hover {
-    outline: 2px solid #0d6efd;
+    outline: 2px dashed #0d6efd;
 }
 </style>

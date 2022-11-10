@@ -13,7 +13,8 @@ const lista = [
     {
         content: [
         ],
-        text: "Sem nome",
+        label: 'Sem nome',
+        text: "",
         attribute: {
             id: "",
             class: "",
@@ -21,43 +22,25 @@ const lista = [
         tag: "",
         style: {
             backgroundColor: "#000000",
-            color:"#ffffff"
+            color: "#ffffff"
         }
     },
 ];
 
-function flatten(items) {
-    console.log(items);
-    const flat = [];
-
-    items.forEach(item => {
-        if (Array.isArray(item)) {
-            flat.push(...flatten(item));
-        } else {
-            item.uuid = uuidv4();
-            flat.push(item);
-        }
-    });
-
-    return flat;
-}
-
-function test(items) {
+function identifyContentItems(items) {
     var res = [];
-    items.forEach(item => {
+    items.forEach(function (item) {
         var _item = item;
         _item.uuid = uuidv4();
         var keys = Object.keys(item);
         const index = keys.indexOf('content');
-        
-        keys.splice(index, 1); 
-        console.log(keys, index);
-        if (item.content && item.content.length > 0) { 
+        keys.splice(index, 1);
+        if (item.content && item.content.length > 0) {
             _item.content = [...test(item.content)];
             res.push(_item);
         } else {
             //res.push(item);
-            for (var key of keys) { 
+            for (var key of keys) {
                 _item[key] = item[key];
             }
             res.push(_item);
@@ -66,47 +49,69 @@ function test(items) {
     return res;
 }
 
-function fidden(items, _item) {
-    console.log(items);
+function replaceContentItem(items, _item) {
     const flat = [];
 
-    items.forEach(item => {
-
+    items.forEach(function (item) {
         if (!Array.isArray(item)) {
             if (item.uuid !== _item.uuid) {
-                //console.log('not located');
                 flat.push(item);
             } else {
                 flat.push(_item);
-                //console.log('located');
             }
         } else {
-            flat.push(...fidden(item));
+            flat.push(...replaceContentItem(item));
         }
-
-
     });
 
     return flat;
 }
 
+function removeContentItem(items, _item) {
+    const flat = [];
+
+    items.forEach(function (item) {
+        if (!Array.isArray(item)) {
+            if (item.uuid !== _item.uuid) {
+                flat.push(item);
+            }
+        } else {
+            flat.push(...removeContentItem(item));
+        }
+    });
+
+    return flat;
+}
+
+
 export default {
     data: function () {
         return {
-            content: test(lista),
+            content: identifyContentItems(lista),
         };
     },
     mounted: function () {
         this.$emitter.emit('sent-editor-content', this.content);
         this.$emitter.on('sent-editor-content', this.receivedContent);
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
+        this.$emitter.on('sent-remove-content', this.removeContent);
     },
     methods: {
+        refreshContent: function () {
+            this.$emitter.emit('sent-editor-content', this.content);
+        },
         receivedChangedContents: function (content) {
-            console.log('receivedChangedContents', content);
-            this.content = fidden(this.content, content);
+            console.log('sent-changed-content', content);
+            this.content = replaceContentItem(this.content, content);
+            this.refreshContent();
+        },
+        removeContent: function (content) {
+            console.log('sent-remove-content', content);
+            this.content = removeContentItem(this.content, content);
+            this.refreshContent();
         },
         receivedContent: function (content) {
+            console.log('sent-editor-content', content);
             this.content = content;
         }
     },

@@ -33,6 +33,7 @@ import Element from './components/editor/components/Element.vue';
 
 // Css
 import bootstrapCSS from '../node_modules/bootstrap/dist/css/bootstrap.css';
+import fontawesomeCSS from '../node_modules/font-awesome/css/font-awesome.css';
 
 // level 1 - Components
 import Header from './components/Header.vue';

@@ -11,9 +11,15 @@
               <input type="text" class="form-control" v-model="content.label" />
             </div>
             <div class="col-auto my-auto">
-              <button class="btn btn-info me-2" @click="handleButtonClick(content, collapse)">EDIT</button>
-              <button class="btn btn-danger me-2" @click="deleteLayer">DEL</button>
-              <button class="btn btn-primary" @click="addNewLayer">ADD</button>
+              <button class="btn btn-info text-white me-2" @click="handleButtonClick(content, collapse)">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-danger me-2" @click="deleteLayer">
+                <i class="fa fa-times"></i>
+              </button>
+              <button class="btn btn-primary" @click="addNewLayer">
+                <i class="fa fa-plus"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -27,6 +33,7 @@
 </template>
   
 <script>
+import fa from 'fontawesome';
 import { v4 as uuidv4 } from 'uuid';
 
 export default {

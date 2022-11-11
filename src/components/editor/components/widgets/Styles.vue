@@ -2,8 +2,7 @@
     <h3>Estilos</h3>
     <div v-if="content.uuid" class="card">
         <div class="card-body">
-            <h4>Adicionar estilo</h4>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="form-group col-auto">
                     <select class="form-control" v-model="add.valueId" @change="changedValueId(add.valueId)">
                         <option disabled :value="null">Selecione uma opção</option>
@@ -15,10 +14,12 @@
                     <input v-else class="form-control" type="text" v-model="add.value" />
                 </div>
                 <div class="form-group col-auto">
-                    <button class="btn btn-primary" @click="adicionar">Adicionar</button>
+                    <button class="btn btn-primary" @click="adicionar">
+                        <i class="fa fa-plus"></i>
+                    </button>
                 </div>
             </div>
-            <h4>Estilos adicionados</h4>
+            <h4>Adicionado</h4>
             <div class="row">
                 <div class="form-group col-12" v-for="(value, key, index) in content.style" :key="index"
                     v-show="showAttribute(key)">

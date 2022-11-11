@@ -11,8 +11,8 @@ module.exports = (env = {}) => ({
     path.resolve(__dirname, './src/main.js')
   ].filter(Boolean),
   output: {
-    path: path.resolve(__dirname, './public_html'),
-    publicPath: '/public_html/'
+    path: path.resolve(__dirname, './public_html/assets'),
+    publicPath: 'http://localhost:3000/assets/'
   },
   resolve: {
     alias: {
@@ -44,7 +44,15 @@ module.exports = (env = {}) => ({
           },
           'css-loader'
         ]
-      }
+      },
+      {
+        test: /\.(woff|woff2|ttf|eot)$/,
+        use: 'file-loader'
+      },
+      {
+        test: /\.svg$/,
+        use: 'file-loader'
+      },
     ]
   },
   plugins: [

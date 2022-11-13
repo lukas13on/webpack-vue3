@@ -1,5 +1,5 @@
 <template>
-    <main class="col-9">
+    <main class="col-9 pt-2">
         <slot></slot>
     </main>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="element" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
+  <div class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
     {{computedText(content)}}
     <template v-if="content.content.length">
       <Element v-for="(content, index) in content.content" :key="index" :is="computedTag(content)" :content="content"
@@ -19,6 +19,13 @@ export default {
     return {};
   },
   methods: {
+    handleButtonClick: function (event, content, collapse) {
+      event.stopPropagation();
+      console.log(event);
+      console.log('sent-attributes-content', 'collapsed');
+      this.$emitter.emit('sent-attributes-content', content);
+      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+    },
     jsonData: function (a) {
       return JSON.stringify(a)
     },
@@ -74,6 +81,6 @@ export default {
 </script>
 <style>
 .element:hover {
-    outline: 2px dashed #0d6efd;
+    outline: 2px dashed red;
 }
 </style>

@@ -8,7 +8,7 @@
                         <label><b>Camada principal</b></label>
                     </div>
                     <div class="col-auto my-auto">
-                        <button class="btn btn-primary w-100" @click="addNewLayer">
+                        <button class="btn btn-dark w-100" @click="addNewLayer">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>

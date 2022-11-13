@@ -17,7 +17,7 @@
               <button class="btn btn-danger me-2" @click="deleteLayer">
                 <i class="fa fa-times"></i>
               </button>
-              <button class="btn btn-primary" @click="addNewLayer">
+              <button class="btn btn-dark" @click="addNewLayer">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -33,7 +33,6 @@
 </template>
   
 <script>
-import fa from 'fontawesome';
 import { v4 as uuidv4 } from 'uuid';
 
 export default {
@@ -42,18 +41,27 @@ export default {
   data() {
     return {
       collapse: false,
+      active:false
     };
   },
   methods: {
     handleButtonClick: function (content, collapse) {
       console.log('sent-attributes-content', 'collapsed');
       this.$emitter.emit('sent-attributes-content', content);
+      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
     },
     collapseContent: function () {
+
+        this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+        this.$emitter.emit('sent-attributes-content', this.content);
+
       this.collapse = this.collapse ? false : true;
     },
     accordionButtonClass: function (content) {
       var standard = 'accordion-button';
+      if (content.active) { 
+        standard += ' active';
+      }
       return this.collapse === true ? standard : standard + ' collapsed';
     },
     accordionCollapseClass: function (content) {
@@ -78,11 +86,11 @@ export default {
       this.sentEditorContent();
     },
     deleteLayer: function () {
-      this.$emitter.emit('sent-remove-content', this.content);
+      this.$emitter.emit('sent-remove-content', { id: this.content.uuid });
       this.$emitter.emit('sent-attributes-content', {});
     },
     sentEditorContent: function () {
-      this.$emitter.emit('sent-changed-content', this.content);
+      this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
     }
   },
   computed: {
@@ -96,31 +104,10 @@ export default {
   },
 };
 </script>
-<style>
-.wrapperDivFromVueComponent {
-  padding: 20px;
-  margin: 5px;
-  border: 1px solid #ff0000;
-}
-</style>
-
 <style scoped>
-.btn-light-outline {
-  border-color: #dee2e6 !important;
-  border-radius: 0px;
-  padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
-  text-align: left;
-}
-
-.btn-light-outline.active {
-  background-color: #e7f1ff;
-  color: #0c63e4;
-}
-
-.btn-light-outline:focus {
-  z-index: 3;
-  border-color: var(--bs-accordion-btn-focus-border-color);
-  outline: 0;
-  box-shadow: var(--bs-accordion-btn-focus-box-shadow);
+.accordion-button.active {
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
 }
 </style>

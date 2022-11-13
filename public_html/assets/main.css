@@ -1,6 +1,6 @@
 
 .element:hover {
-    outline: 2px dashed #0d6efd;
+    outline: 2px dashed red;
 }
 
 @charset "UTF-8";
@@ -10889,8 +10889,8 @@ textarea.form-control-lg {
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url(/assets/8b43027f47b20503057dfbbaa9401fef.eot);
-  src: url(/assets/8b43027f47b20503057dfbbaa9401fef.eot?#iefix&v=4.7.0) format('embedded-opentype'), url(/assets/20fd1704ea223900efa9fd4e869efb08.woff2) format('woff2'), url(/assets/f691f37e57f04c152e2315ab7dbad881.woff) format('woff'), url(/assets/1e59d2330b4c6deb84b340635ed36249.ttf) format('truetype'), url(/assets/c1e38fd9e0e74ba58f7a2b77ef29fdd3.svg#fontawesomeregular) format('svg');
+  src: url(http://localhost:3000/assets/8b43027f47b20503057dfbbaa9401fef.eot);
+  src: url(http://localhost:3000/assets/8b43027f47b20503057dfbbaa9401fef.eot?#iefix&v=4.7.0) format('embedded-opentype'), url(http://localhost:3000/assets/20fd1704ea223900efa9fd4e869efb08.woff2) format('woff2'), url(http://localhost:3000/assets/f691f37e57f04c152e2315ab7dbad881.woff) format('woff'), url(http://localhost:3000/assets/1e59d2330b4c6deb84b340635ed36249.ttf) format('truetype'), url(http://localhost:3000/assets/c1e38fd9e0e74ba58f7a2b77ef29fdd3.svg#fontawesomeregular) format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -13220,28 +13220,10 @@ textarea.form-control-lg {
 }
 
 
-.wrapperDivFromVueComponent {
-  padding: 20px;
-  margin: 5px;
-  border: 1px solid #ff0000;
-}
-
-
-.btn-light-outline[data-v-5cd84a7a] {
-  border-color: #dee2e6 !important;
-  border-radius: 0px;
-  padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
-  text-align: left;
-}
-.btn-light-outline.active[data-v-5cd84a7a] {
-  background-color: #e7f1ff;
-  color: #0c63e4;
-}
-.btn-light-outline[data-v-5cd84a7a]:focus {
-  z-index: 3;
-  border-color: var(--bs-accordion-btn-focus-border-color);
-  outline: 0;
-  box-shadow: var(--bs-accordion-btn-focus-box-shadow);
+.accordion-button.active[data-v-5cd84a7a] {
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
 }
 
 
@@ -13251,9 +13233,9 @@ label[data-v-0353136e] {
 }
 
 
-label[data-v-aac82f44]{
-        display:block;
-        width:100%;
+label[data-v-aac82f44] {
+    display: block;
+    width: 100%;
 }
 
 

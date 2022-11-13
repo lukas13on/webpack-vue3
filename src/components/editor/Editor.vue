@@ -27,62 +27,86 @@ const lista = [
     },
 ];
 
+/**
+ * Coloca uma identificação em cada elemento da lista
+ * @param {*} items Lista
+ * @returns 
+ */
 function identifyContentItems(items) {
     var res = [];
     items.forEach(function (item) {
-        var _item = item;
-        _item.uuid = uuidv4();
-        var keys = Object.keys(item);
-        const index = keys.indexOf('content');
-        keys.splice(index, 1);
-        if (item.content && item.content.length > 0) {
-            _item.content = [...test(item.content)];
-            res.push(_item);
-        } else {
-            //res.push(item);
-            for (var key of keys) {
-                _item[key] = item[key];
-            }
-            res.push(_item);
+        item.uuid = uuidv4();
+        item.active = false;
+        if (item.content) {
+            item.content = identifyContentItems(item.content);
+        }
+        res.push(item);
+
+    });
+    return res;
+}
+
+/**
+ * Substitui um elemento da lista por outro valor
+ * @param {*} replace Valor
+ * @param {*} items Lista
+ * @param {*} id Identificação
+ * @returns 
+ */
+function replaceContentItem(replace, items, id) {
+    var res = [];
+    items.forEach(function (item) {
+        if (item.uuid === id) {
+            item = replace;
+            item.uuid = uuidv4();
+        }
+        if (item.content) {
+            item.content = replaceContentItem(replace, item.content, id);
+        }
+        res.push(item);
+    });
+    return res;
+}
+
+/**
+ * Remove um elemento da lista pela identificacao
+ * @param {*} items 
+ * @param {*} id 
+ * @returns 
+ */
+function removeContentItem(items, id) {
+    var res = [];
+    items.forEach(function (item) {
+        if (item.content) {
+            item.content = removeContentItem(item.content, id);
+        }
+        if (item.uuid !== id) {
+            res.push(item);
         }
     });
     return res;
 }
 
-function replaceContentItem(items, _item) {
-    const flat = [];
-
+/**
+ * Ativa um elemento da lista pela identificacao
+ * @param {*} items 
+ * @param {*} id 
+ */
+function activeContentItem(items, id) {
+    var res = [];
     items.forEach(function (item) {
-        if (!Array.isArray(item)) {
-            if (item.uuid !== _item.uuid) {
-                flat.push(item);
-            } else {
-                flat.push(_item);
-            }
-        } else {
-            flat.push(...replaceContentItem(item));
+        if (item.content) {
+            item.content = activeContentItem(item.content, id);
         }
-    });
-
-    return flat;
-}
-
-function removeContentItem(items, _item) {
-    const flat = [];
-
-    items.forEach(function (item) {
-        if (!Array.isArray(item)) {
-            if (item.uuid !== _item.uuid) {
-                flat.push(item);
-            }
+        if (item.uuid === id) {
+            item.active = true;
         } else {
-            flat.push(...removeContentItem(item));
+            item.active = false;
         }
+        res.push(item);
     });
-
-    return flat;
+    return res;
 }
-
 
 export default {
     data: function () {
@@ -94,20 +118,26 @@ export default {
         this.$emitter.emit('sent-editor-content', this.content);
         this.$emitter.on('sent-editor-content', this.receivedContent);
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
+        this.$emitter.on('sent-active-content', this.activeContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
     },
     methods: {
         refreshContent: function () {
             this.$emitter.emit('sent-editor-content', this.content);
         },
-        receivedChangedContents: function (content) {
-            console.log('sent-changed-content', content);
-            this.content = replaceContentItem(this.content, content);
+        receivedChangedContents: function (data) {
+            console.log('sent-changed-content', data);
+            this.content = replaceContentItem(data.content, this.content, data.id);
             this.refreshContent();
         },
-        removeContent: function (content) {
-            console.log('sent-remove-content', content);
-            this.content = removeContentItem(this.content, content);
+        removeContent: function (data) {
+            console.log('sent-remove-content', data);
+            this.content = removeContentItem(this.content, data.id);
+            this.refreshContent();
+        },
+        activeContent: function (data) {
+            console.log('sent-active-content', data);
+            this.content = activeContentItem(this.content, data.id);
             this.refreshContent();
         },
         receivedContent: function (content) {

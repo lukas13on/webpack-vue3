@@ -78,7 +78,7 @@ export default {
         },
         handdleContentChange: function () {
             console.log('sent-changed-content');
-            this.$emitter.emit('sent-changed-content', this.content);
+            this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
         },
         keyup: function (val) {
             console.log(val)

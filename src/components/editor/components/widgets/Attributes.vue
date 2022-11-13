@@ -4,19 +4,23 @@
         <div class="card-body">
             <div class="form-group">
                 <label>Classe (Class)</label>
-                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.attribute.class" placeholder="Nome da classe"/>
+                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.attribute.class"
+                    placeholder="Nome da classe" />
             </div>
             <div class="form-group">
                 <label>Identificação (Id)</label>
-                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.attribute.id" placeholder="Nome da identificação"/>
+                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.attribute.id"
+                    placeholder="Nome da identificação" />
             </div>
             <div class="form-group">
                 <label>Elemento (Tag)</label>
-                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.tag" placeholder="Nome do elemento"/>
+                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.tag"
+                    placeholder="Nome do elemento" />
             </div>
             <div class="form-group">
                 <label>Conteúdo (Text)</label>
-                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.text" placeholder="Nome do elemento"/>
+                <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.text"
+                    placeholder="Nome do elemento" />
             </div>
         </div>
     </div>
@@ -31,7 +35,7 @@
 
 <script>
 export default {
-    data: function () { 
+    data: function () {
         return {
             content: {
                 attribute: {
@@ -51,15 +55,15 @@ export default {
         },
         handdleContentChange: function () {
             console.log('sent-changed-content');
-            this.$emitter.emit('sent-changed-content', this.content);
+            this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
         }
     }
 };
 </script>
 
 <style scoped>
-    label{
-        display:block;
-        width:100%;
-    }
+label {
+    display: block;
+    width: 100%;
+}
 </style>

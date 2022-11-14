@@ -1,23 +1,34 @@
 <template>
   <div class="accordion-item">
     <h2 class="accordion-header">
-      <button :class="accordionButtonClass(content)" @click="collapseContent">{{ content.label }}</button>
+      <button :class="accordionButtonClass(content)" @click="collapseContent">{{ contentLabel(content) }}</button>
     </h2>
     <div :class="accordionCollapseClass(content)">
       <div class="px-4 py-2">
         <div class="form-group">
           <div class="form-group row">
             <div class="col my-auto">
-              <input type="text" class="form-control" v-model="content.label" />
+              <input ref="input" type="text" class="form-control" v-model="content.label" @keyup="sentEditorContent" />
             </div>
             <div class="col-auto my-auto">
+              <!--
               <button class="btn btn-info text-white me-2" @click="handleButtonClick(content, collapse)">
                 <i class="fa fa-edit"></i>
               </button>
-              <button class="btn btn-danger me-2" @click="deleteLayer">
+              -->
+              <button class="btn btn-sm btn-primary me-2 disabled">
+                <i class="fa fa-copy"></i>
+              </button>
+              <button class="btn btn-sm btn-warning me-2 disabled">
+                <i class="fa fa-paste"></i>
+              </button>
+              <button class="btn btn-sm btn-secondary me-2 disabled">
+                <i class="fa fa-clone"></i>
+              </button>
+              <button class="btn btn-sm btn-danger me-2" @click="deleteLayer">
                 <i class="fa fa-times"></i>
               </button>
-              <button class="btn btn-dark" @click="addNewLayer">
+              <button class="btn btn-sm btn-dark" @click="addNewLayer">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -41,25 +52,41 @@ export default {
   data() {
     return {
       collapse: false,
-      active:false
+      label: ''
     };
   },
   methods: {
-    handleButtonClick: function (content, collapse) {
+    contentLabel: function (content) {
+      var x = this;
+      console.log(x.label, content.label);
+      if (content.label === undefined || content.label === '') {
+        return 'Sem nome';
+      } else {
+        return content.label;
+      }
+    },
+    handleButtonClick: function (content) {
       console.log('sent-attributes-content', 'collapsed');
       this.$emitter.emit('sent-attributes-content', content);
       this.$emitter.emit('sent-active-content', { id: this.content.uuid });
     },
     collapseContent: function () {
-
-        this.$emitter.emit('sent-active-content', { id: this.content.uuid });
-        this.$emitter.emit('sent-attributes-content', this.content);
-
+      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+      this.$emitter.emit('sent-attributes-content', this.content);
       this.collapse = this.collapse ? false : true;
+      if (this.collapse) {
+        this.focusLabelInput();
+      }
+    },
+    focusLabelInput: function () { 
+      var self = this;
+      setTimeout(function () {
+        self.$refs.input.focus();
+      }, 150);
     },
     accordionButtonClass: function (content) {
       var standard = 'accordion-button';
-      if (content.active) { 
+      if (content.active) {
         standard += ' active';
       }
       return this.collapse === true ? standard : standard + ' collapsed';
@@ -72,7 +99,7 @@ export default {
       var that = this;
       console.log(that)
       this.content.content.push({
-        label: 'Sem nome',
+        label: '',
         text: '',
         tag: '',
         attribute: {
@@ -94,7 +121,6 @@ export default {
     }
   },
   computed: {
-
   },
   components: {
     Layer: import('./Layer.vue'),
@@ -106,8 +132,11 @@ export default {
 </script>
 <style scoped>
 .accordion-button.active {
-    background-color: #0d6efd;
-    color: #fff;
-    font-weight: bold;
+  background-color: #0d6efd;
+  color: #fff;
+  font-weight: bold;
+}
+input.form-control{
+  cursor:pointer;
 }
 </style>

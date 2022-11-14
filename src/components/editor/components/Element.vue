@@ -57,10 +57,14 @@ export default {
       return styles;
     },
     computedClass: function (content) {
-      return content.attribute.class ? content.attribute.class : false;
+      var standard = content.attribute.class ? content.attribute.class : ''
+      if (content.active) {
+        standard += ' active';
+      }
+      return standard;
     },
     computedId: function (content) {
-      return content.attribute.id ? content.attribute.id : false;
+      return content.attribute.id ? content.attribute.id : '';
     },
     computedTag: function (content) {
       return content.tag ? content.tag : 'div';
@@ -80,7 +84,10 @@ export default {
 };
 </script>
 <style>
-.element:hover {
+.element:hover, .element.active {
     outline: 2px dashed red;
+}
+.element.active{
+  padding: 5px;
 }
 </style>

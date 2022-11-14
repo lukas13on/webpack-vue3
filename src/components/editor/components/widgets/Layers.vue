@@ -40,7 +40,7 @@ export default {
     methods: {
         addNewLayer: function () { 
             this.content.push({
-                label: 'Sem nome',
+                label: '',
                 text: '',
                 tag: '',
                 attribute: {

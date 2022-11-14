@@ -13,7 +13,7 @@ const lista = [
     {
         content: [
         ],
-        label: 'Sem nome',
+        label: '',
         text: "",
         attribute: {
             id: "",

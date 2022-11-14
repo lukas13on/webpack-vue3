@@ -1,6 +1,9 @@
 
-.element:hover {
+.element:hover, .element.active {
     outline: 2px dashed red;
+}
+.element.active{
+  padding: 5px;
 }
 
 @charset "UTF-8";
@@ -13221,9 +13224,12 @@ textarea.form-control-lg {
 
 
 .accordion-button.active[data-v-5cd84a7a] {
-    background-color: #0d6efd;
-    color: #fff;
-    font-weight: bold;
+  background-color: #0d6efd;
+  color: #fff;
+  font-weight: bold;
+}
+input.form-control[data-v-5cd84a7a]{
+  cursor:pointer;
 }
 
 

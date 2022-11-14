@@ -13251,7 +13251,7 @@ const lista = [
     {
         content: [
         ],
-        label: 'Sem nome',
+        label: '',
         text: "",
         attribute: {
             id: "",
@@ -13449,10 +13449,14 @@ __webpack_require__.r(__webpack_exports__);
       return styles;
     },
     computedClass: function (content) {
-      return content.attribute.class ? content.attribute.class : false;
+      var standard = content.attribute.class ? content.attribute.class : ''
+      if (content.active) {
+        standard += ' active';
+      }
+      return standard;
     },
     computedId: function (content) {
-      return content.attribute.id ? content.attribute.id : false;
+      return content.attribute.id ? content.attribute.id : '';
     },
     computedTag: function (content) {
       return content.tag ? content.tag : 'div';
@@ -13493,25 +13497,41 @@ __webpack_require__.r(__webpack_exports__);
   data() {
     return {
       collapse: false,
-      active:false
+      label: ''
     };
   },
   methods: {
-    handleButtonClick: function (content, collapse) {
+    contentLabel: function (content) {
+      var x = this;
+      console.log(x.label, content.label);
+      if (content.label === undefined || content.label === '') {
+        return 'Sem nome';
+      } else {
+        return content.label;
+      }
+    },
+    handleButtonClick: function (content) {
       console.log('sent-attributes-content', 'collapsed');
       this.$emitter.emit('sent-attributes-content', content);
       this.$emitter.emit('sent-active-content', { id: this.content.uuid });
     },
     collapseContent: function () {
-
-        this.$emitter.emit('sent-active-content', { id: this.content.uuid });
-        this.$emitter.emit('sent-attributes-content', this.content);
-
+      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+      this.$emitter.emit('sent-attributes-content', this.content);
       this.collapse = this.collapse ? false : true;
+      if (this.collapse) {
+        this.focusLabelInput();
+      }
+    },
+    focusLabelInput: function () { 
+      var self = this;
+      setTimeout(function () {
+        self.$refs.input.focus();
+      }, 150);
     },
     accordionButtonClass: function (content) {
       var standard = 'accordion-button';
-      if (content.active) { 
+      if (content.active) {
         standard += ' active';
       }
       return this.collapse === true ? standard : standard + ' collapsed';
@@ -13524,7 +13544,7 @@ __webpack_require__.r(__webpack_exports__);
       var that = this;
       console.log(that)
       this.content.content.push({
-        label: 'Sem nome',
+        label: '',
         text: '',
         tag: '',
         attribute: {
@@ -13546,7 +13566,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   computed: {
-
   },
   components: {
     Layer: Promise.resolve(/*! import() */).then(__webpack_require__.bind(null, /*! ./Layer.vue */ "./src/components/editor/components/Layer.vue")),
@@ -13662,7 +13681,7 @@ __webpack_require__.r(__webpack_exports__);
     methods: {
         addNewLayer: function () { 
             this.content.push({
-                label: 'Sem nome',
+                label: '',
                 text: '',
                 tag: '',
                 attribute: {
@@ -14162,19 +14181,16 @@ const _hoisted_4 = { class: "form-group" }
 const _hoisted_5 = { class: "form-group row" }
 const _hoisted_6 = { class: "col my-auto" }
 const _hoisted_7 = { class: "col-auto my-auto" }
-const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-edit" }, null, -1 /* HOISTED */))
-const _hoisted_9 = [
-  _hoisted_8
+const _hoisted_8 = /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createStaticVNode"])("<button class=\"btn btn-sm btn-primary me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-copy\" data-v-5cd84a7a></i></button><button class=\"btn btn-sm btn-warning me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-paste\" data-v-5cd84a7a></i></button><button class=\"btn btn-sm btn-secondary me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-clone\" data-v-5cd84a7a></i></button>", 3)
+const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
+const _hoisted_12 = [
+  _hoisted_11
 ]
-const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
-const _hoisted_11 = [
-  _hoisted_10
+const _hoisted_13 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_14 = [
+  _hoisted_13
 ]
-const _hoisted_12 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
-const _hoisted_13 = [
-  _hoisted_12
-]
-const _hoisted_14 = {
+const _hoisted_15 = {
   key: 0,
   class: "accordion-body"
 }
@@ -14187,7 +14203,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
         class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.accordionButtonClass($props.content)),
         onClick: _cache[0] || (_cache[0] = (...args) => ($options.collapseContent && $options.collapseContent(...args)))
-      }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($props.content.label), 3 /* TEXT, CLASS */)
+      }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.contentLabel($props.content)), 3 /* TEXT, CLASS */)
     ]),
     Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", {
       class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.accordionCollapseClass($props.content))
@@ -14197,32 +14213,32 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_5, [
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_6, [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                ref: "input",
                 type: "text",
                 class: "form-control",
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($props.content.label) = $event))
-              }, null, 512 /* NEED_PATCH */), [
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($props.content.label) = $event)),
+                onKeyup: _cache[2] || (_cache[2] = (...args) => ($options.sentEditorContent && $options.sentEditorContent(...args)))
+              }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
                 [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], $props.content.label]
               ])
             ]),
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_7, [
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("\r\n              <button class=\"btn btn-info text-white me-2\" @click=\"handleButtonClick(content, collapse)\">\r\n                <i class=\"fa fa-edit\"></i>\r\n              </button>\r\n              "),
+              _hoisted_8,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
-                class: "btn btn-info text-white me-2",
-                onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($props.content, $data.collapse)))
-              }, _hoisted_9),
-              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
-                class: "btn btn-danger me-2",
+                class: "btn btn-sm btn-danger me-2",
                 onClick: _cache[3] || (_cache[3] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
-              }, _hoisted_11),
+              }, _hoisted_12),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
-                class: "btn btn-dark",
+                class: "btn btn-sm btn-dark",
                 onClick: _cache[4] || (_cache[4] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, _hoisted_13)
+              }, _hoisted_14)
             ])
           ])
         ])
       ]),
       ($props.content.content.length > 0)
-        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_14, [
+        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_15, [
             (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
               return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
                 key: index,
@@ -14720,14 +14736,13 @@ function elementStyleAttrs(element) {
                 attribute.indexOf('moz') === -1 &&
                 attribute.indexOf('ms') === -1) {
                 attributes.push(String(attribute));
-                //attributes[attribute] = '';
             }
         }
 
         return attributes;
 
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error('Error on element styles attributes engine: '+error.message);
     }
 
 }

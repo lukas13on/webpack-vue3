@@ -13,14 +13,13 @@ function elementStyleAttrs(element) {
                 attribute.indexOf('moz') === -1 &&
                 attribute.indexOf('ms') === -1) {
                 attributes.push(String(attribute));
-                //attributes[attribute] = '';
             }
         }
 
         return attributes;
 
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error('Error on element styles attributes engine: '+error.message);
     }
 
 }

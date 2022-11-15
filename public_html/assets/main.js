@@ -13359,10 +13359,6 @@ function activeContentItem(items, id) {
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
         this.$emitter.on('sent-active-content', this.activeContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
-        var self = this;
-        setInterval(function () {
-            self.readClipboardData();
-        }, 1000);
     },
     methods: {
         refreshContent: function () {
@@ -13386,17 +13382,6 @@ function activeContentItem(items, id) {
         receivedContent: function (content) {
             console.log('sent-editor-content', content);
             this.content = content;
-        },
-        readClipboardData: function () {
-            navigator.clipboard.readText()
-                .then(text => {
-                    this.clipboard = text;
-                    console.log('Pasted content: ', text);
-                })
-                .catch(err => {
-                    this.clipboard = '';
-                    console.error('Failed to read clipboard contents: ', err);
-                });
         },
     },
     components: {
@@ -13513,8 +13498,7 @@ __webpack_require__.r(__webpack_exports__);
   data() {
     return {
       collapse: false,
-      label: '',
-      paste: ''
+      label: ''
     };
   },
   methods: {
@@ -13587,6 +13571,22 @@ __webpack_require__.r(__webpack_exports__);
       }, function (err) {
         console.error('Async: Could not copy text: ', err);
       });
+    },
+    pasteLayer: function () {
+      navigator.clipboard.readText()
+        .then(text => {
+          var obj = JSON.parse(text);
+          obj.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])();
+          obj.active = false;
+          this.content.content.push(obj);
+          this.sentEditorContent();
+          //this.clipboard = text;
+          console.log('Pasted content: ', text, obj);
+        })
+        .catch(err => {
+          //this.clipboard = '';
+          console.error('Failed to read clipboard contents: ', err);
+        });
     },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
@@ -14218,21 +14218,22 @@ const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEB
 const _hoisted_9 = [
   _hoisted_8
 ]
-const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-warning me-2 disabled" }, [
-  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-paste" })
-], -1 /* HOISTED */))
-const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-secondary me-2 disabled" }, [
+const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-paste" }, null, -1 /* HOISTED */))
+const _hoisted_11 = [
+  _hoisted_10
+]
+const _hoisted_12 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-secondary me-2 disabled" }, [
   /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-clone" })
 ], -1 /* HOISTED */))
-const _hoisted_12 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
-const _hoisted_13 = [
-  _hoisted_12
+const _hoisted_13 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
+const _hoisted_14 = [
+  _hoisted_13
 ]
-const _hoisted_14 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
-const _hoisted_15 = [
-  _hoisted_14
+const _hoisted_15 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_16 = [
+  _hoisted_15
 ]
-const _hoisted_16 = {
+const _hoisted_17 = {
   key: 0,
   class: "accordion-body"
 }
@@ -14270,22 +14271,25 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 class: "btn btn-sm btn-primary me-2",
                 onClick: _cache[3] || (_cache[3] = (...args) => ($options.copyLayer && $options.copyLayer(...args)))
               }, _hoisted_9),
-              _hoisted_10,
-              _hoisted_11,
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-sm btn-warning me-2",
+                onClick: _cache[4] || (_cache[4] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
+              }, _hoisted_11),
+              _hoisted_12,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-danger me-2",
-                onClick: _cache[4] || (_cache[4] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
-              }, _hoisted_13),
+                onClick: _cache[5] || (_cache[5] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
+              }, _hoisted_14),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-dark",
-                onClick: _cache[5] || (_cache[5] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, _hoisted_15)
+                onClick: _cache[6] || (_cache[6] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+              }, _hoisted_16)
             ])
           ])
         ])
       ]),
       ($props.content.content.length > 0)
-        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_16, [
+        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_17, [
             (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
               return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
                 key: index,

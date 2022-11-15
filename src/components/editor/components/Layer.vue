@@ -19,7 +19,7 @@
               <button class="btn btn-sm btn-primary me-2" @click="copyLayer">
                 <i class="fa fa-copy"></i>
               </button>
-              <button class="btn btn-sm btn-warning me-2 disabled">
+              <button class="btn btn-sm btn-warning me-2" @click="pasteLayer">
                 <i class="fa fa-paste"></i>
               </button>
               <button class="btn btn-sm btn-secondary me-2 disabled">
@@ -52,8 +52,7 @@ export default {
   data() {
     return {
       collapse: false,
-      label: '',
-      paste: ''
+      label: ''
     };
   },
   methods: {
@@ -126,6 +125,22 @@ export default {
       }, function (err) {
         console.error('Async: Could not copy text: ', err);
       });
+    },
+    pasteLayer: function () {
+      navigator.clipboard.readText()
+        .then(text => {
+          var obj = JSON.parse(text);
+          obj.uuid = uuidv4();
+          obj.active = false;
+          this.content.content.push(obj);
+          this.sentEditorContent();
+          //this.clipboard = text;
+          console.log('Pasted content: ', text, obj);
+        })
+        .catch(err => {
+          //this.clipboard = '';
+          console.error('Failed to read clipboard contents: ', err);
+        });
     },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });

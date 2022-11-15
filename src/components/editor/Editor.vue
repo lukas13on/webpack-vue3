@@ -121,10 +121,6 @@ export default {
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
         this.$emitter.on('sent-active-content', this.activeContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
-        var self = this;
-        setInterval(function () {
-            self.readClipboardData();
-        }, 1000);
     },
     methods: {
         refreshContent: function () {
@@ -148,17 +144,6 @@ export default {
         receivedContent: function (content) {
             console.log('sent-editor-content', content);
             this.content = content;
-        },
-        readClipboardData: function () {
-            navigator.clipboard.readText()
-                .then(text => {
-                    this.clipboard = text;
-                    console.log('Pasted content: ', text);
-                })
-                .catch(err => {
-                    this.clipboard = '';
-                    console.error('Failed to read clipboard contents: ', err);
-                });
         },
     },
     components: {

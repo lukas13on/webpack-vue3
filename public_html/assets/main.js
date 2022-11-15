@@ -13270,13 +13270,13 @@ const lista = [
  * @param {*} items Lista
  * @returns 
  */
-function identifyContentItems(items) {
+function identifyContentItems(items, parentId) {
     var res = [];
     items.forEach(function (item) {
         item.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])();
         item.active = false;
         if (item.content) {
-            item.content = identifyContentItems(item.content);
+            item.content = identifyContentItems(item.content, item.id);
         }
         res.push(item);
 
@@ -13350,6 +13350,7 @@ function activeContentItem(items, id) {
     data: function () {
         return {
             content: identifyContentItems(lista),
+            clipboard: null
         };
     },
     mounted: function () {
@@ -13358,6 +13359,10 @@ function activeContentItem(items, id) {
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
         this.$emitter.on('sent-active-content', this.activeContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
+        var self = this;
+        setInterval(function () {
+            self.readClipboardData();
+        }, 1000);
     },
     methods: {
         refreshContent: function () {
@@ -13381,7 +13386,18 @@ function activeContentItem(items, id) {
         receivedContent: function (content) {
             console.log('sent-editor-content', content);
             this.content = content;
-        }
+        },
+        readClipboardData: function () {
+            navigator.clipboard.readText()
+                .then(text => {
+                    this.clipboard = text;
+                    console.log('Pasted content: ', text);
+                })
+                .catch(err => {
+                    this.clipboard = '';
+                    console.error('Failed to read clipboard contents: ', err);
+                });
+        },
     },
     components: {
         Element: _editor_components_Element_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -13497,7 +13513,8 @@ __webpack_require__.r(__webpack_exports__);
   data() {
     return {
       collapse: false,
-      label: ''
+      label: '',
+      paste: ''
     };
   },
   methods: {
@@ -13523,7 +13540,7 @@ __webpack_require__.r(__webpack_exports__);
         this.focusLabelInput();
       }
     },
-    focusLabelInput: function () { 
+    focusLabelInput: function () {
       var self = this;
       setTimeout(function () {
         self.$refs.input.focus();
@@ -13561,14 +13578,30 @@ __webpack_require__.r(__webpack_exports__);
       this.$emitter.emit('sent-remove-content', { id: this.content.uuid });
       this.$emitter.emit('sent-attributes-content', {});
     },
+    copyLayer: function () {
+      //this.$emitter.emit('sent-copied-content', {content: this.content});
+      var text = "Example text to appear on clipboard";
+      var data = JSON.stringify(this.content);
+      navigator.clipboard.writeText(data).then(function () {
+        console.log(data);
+      }, function (err) {
+        console.error('Async: Could not copy text: ', err);
+      });
+    },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
+    },
+    receivedCopiedContent: function (data) {
+      console.log('sent-copied-content');
+      console.log(data);
     }
   },
   computed: {
   },
   components: {
     Layer: Promise.resolve(/*! import() */).then(__webpack_require__.bind(null, /*! ./Layer.vue */ "./src/components/editor/components/Layer.vue")),
+  },
+  mounted: function () {
   },
   created() {
     console.log(this.content.id);
@@ -14181,16 +14214,25 @@ const _hoisted_4 = { class: "form-group" }
 const _hoisted_5 = { class: "form-group row" }
 const _hoisted_6 = { class: "col my-auto" }
 const _hoisted_7 = { class: "col-auto my-auto" }
-const _hoisted_8 = /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createStaticVNode"])("<button class=\"btn btn-sm btn-primary me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-copy\" data-v-5cd84a7a></i></button><button class=\"btn btn-sm btn-warning me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-paste\" data-v-5cd84a7a></i></button><button class=\"btn btn-sm btn-secondary me-2 disabled\" data-v-5cd84a7a><i class=\"fa fa-clone\" data-v-5cd84a7a></i></button>", 3)
-const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
-const _hoisted_12 = [
-  _hoisted_11
+const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-copy" }, null, -1 /* HOISTED */))
+const _hoisted_9 = [
+  _hoisted_8
 ]
-const _hoisted_13 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
-const _hoisted_14 = [
-  _hoisted_13
+const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-warning me-2 disabled" }, [
+  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-paste" })
+], -1 /* HOISTED */))
+const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-secondary me-2 disabled" }, [
+  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-clone" })
+], -1 /* HOISTED */))
+const _hoisted_12 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
+const _hoisted_13 = [
+  _hoisted_12
 ]
-const _hoisted_15 = {
+const _hoisted_14 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_15 = [
+  _hoisted_14
+]
+const _hoisted_16 = {
   key: 0,
   class: "accordion-body"
 }
@@ -14224,21 +14266,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             ]),
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_7, [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("\r\n              <button class=\"btn btn-info text-white me-2\" @click=\"handleButtonClick(content, collapse)\">\r\n                <i class=\"fa fa-edit\"></i>\r\n              </button>\r\n              "),
-              _hoisted_8,
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-sm btn-primary me-2",
+                onClick: _cache[3] || (_cache[3] = (...args) => ($options.copyLayer && $options.copyLayer(...args)))
+              }, _hoisted_9),
+              _hoisted_10,
+              _hoisted_11,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-danger me-2",
-                onClick: _cache[3] || (_cache[3] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
-              }, _hoisted_12),
+                onClick: _cache[4] || (_cache[4] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
+              }, _hoisted_13),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-dark",
-                onClick: _cache[4] || (_cache[4] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, _hoisted_14)
+                onClick: _cache[5] || (_cache[5] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+              }, _hoisted_15)
             ])
           ])
         ])
       ]),
       ($props.content.content.length > 0)
-        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_15, [
+        ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_16, [
             (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
               return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
                 key: index,

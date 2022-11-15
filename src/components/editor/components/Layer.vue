@@ -16,7 +16,7 @@
                 <i class="fa fa-edit"></i>
               </button>
               -->
-              <button class="btn btn-sm btn-primary me-2 disabled">
+              <button class="btn btn-sm btn-primary me-2" @click="copyLayer">
                 <i class="fa fa-copy"></i>
               </button>
               <button class="btn btn-sm btn-warning me-2 disabled">
@@ -52,7 +52,8 @@ export default {
   data() {
     return {
       collapse: false,
-      label: ''
+      label: '',
+      paste: ''
     };
   },
   methods: {
@@ -78,7 +79,7 @@ export default {
         this.focusLabelInput();
       }
     },
-    focusLabelInput: function () { 
+    focusLabelInput: function () {
       var self = this;
       setTimeout(function () {
         self.$refs.input.focus();
@@ -116,14 +117,30 @@ export default {
       this.$emitter.emit('sent-remove-content', { id: this.content.uuid });
       this.$emitter.emit('sent-attributes-content', {});
     },
+    copyLayer: function () {
+      //this.$emitter.emit('sent-copied-content', {content: this.content});
+      var text = "Example text to appear on clipboard";
+      var data = JSON.stringify(this.content);
+      navigator.clipboard.writeText(data).then(function () {
+        console.log(data);
+      }, function (err) {
+        console.error('Async: Could not copy text: ', err);
+      });
+    },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
+    },
+    receivedCopiedContent: function (data) {
+      console.log('sent-copied-content');
+      console.log(data);
     }
   },
   computed: {
   },
   components: {
     Layer: import('./Layer.vue'),
+  },
+  mounted: function () {
   },
   created() {
     console.log(this.content.id);
@@ -136,7 +153,8 @@ export default {
   color: #fff;
   font-weight: bold;
 }
-input.form-control{
-  cursor:pointer;
+
+input.form-control {
+  cursor: pointer;
 }
 </style>

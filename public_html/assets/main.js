@@ -14329,7 +14329,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 type: "text",
                 class: "form-control",
                 "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($props.content.label) = $event)),
-                onKeyup: _cache[2] || (_cache[2] = (...args) => ($options.sentEditorContent && $options.sentEditorContent(...args)))
+                onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($props.content))),
+                onKeyup: _cache[3] || (_cache[3] = (...args) => ($options.sentEditorContent && $options.sentEditorContent(...args)))
               }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
                 [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], $props.content.label]
               ])
@@ -14338,20 +14339,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("\r\n              <button class=\"btn btn-info text-white me-2\" @click=\"handleButtonClick(content, collapse)\">\r\n                <i class=\"fa fa-edit\"></i>\r\n              </button>\r\n              "),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-primary me-2",
-                onClick: _cache[3] || (_cache[3] = (...args) => ($options.copyLayer && $options.copyLayer(...args)))
+                onClick: _cache[4] || (_cache[4] = (...args) => ($options.copyLayer && $options.copyLayer(...args)))
               }, _hoisted_9),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-warning me-2",
-                onClick: _cache[4] || (_cache[4] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
+                onClick: _cache[5] || (_cache[5] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
               }, _hoisted_11),
               _hoisted_12,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-danger me-2",
-                onClick: _cache[5] || (_cache[5] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
+                onClick: _cache[6] || (_cache[6] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
               }, _hoisted_14),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-dark",
-                onClick: _cache[6] || (_cache[6] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+                onClick: _cache[7] || (_cache[7] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
               }, _hoisted_16)
             ])
           ])

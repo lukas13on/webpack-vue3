@@ -8,7 +8,7 @@
         <div class="form-group">
           <div class="form-group row">
             <div class="col my-auto">
-              <input ref="input" type="text" class="form-control" v-model="content.label" @keyup="sentEditorContent" />
+              <input ref="input" type="text" class="form-control" v-model="content.label" @click="handleButtonClick(content)" @keyup="sentEditorContent" />
             </div>
             <div class="col-auto my-auto">
               <!--

@@ -98,7 +98,12 @@ export default {
 };
 </script>
 <style>
-.element:hover, .element.active {
+.element:hover {
+    outline: 1px dashed red;
+    margin-bottom: 1px !important;
+}
+.element.active {
     outline: 2px dashed red;
+    margin-bottom: 2px !important;
 }
 </style>

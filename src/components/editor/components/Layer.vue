@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-body" v-if="content.content.length > 0">
+      <div class="accordion-body" v-if="content.content">
         <Layer v-for="(content, index) in content.content" :key="index" :content="content">
         </Layer>
       </div>
@@ -82,7 +82,7 @@ export default {
       var self = this;
       setTimeout(function () {
         self.$refs.input.focus();
-      }, 150);
+      }, 50);
     },
     accordionButtonClass: function (content) {
       var standard = 'accordion-button';

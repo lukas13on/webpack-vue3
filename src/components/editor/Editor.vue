@@ -108,6 +108,26 @@ function activeContentItem(items, id) {
     return res;
 }
 
+/**
+ * Remove o texto e o conteudo de tags autofechantes
+ * @param {*} items
+ */
+function normalizeSelfClosingElements(items) {
+    var res = [];
+    items.forEach(function (item) {
+        if (item.tag === 'input' || item.tag === 'img') {
+            delete item.content;
+            delete item.text;
+        } else {
+            if (item.content) {
+                item.content = normalizeSelfClosingElements(item.content);
+            }
+        }
+        res.push(item);
+    });
+    return res;
+}
+
 export default {
     data: function () {
         return {
@@ -124,6 +144,7 @@ export default {
     },
     methods: {
         refreshContent: function () {
+            this.content = normalizeSelfClosingElements(this.content);
             this.$emitter.emit('sent-editor-content', this.content);
         },
         receivedChangedContents: function (data) {

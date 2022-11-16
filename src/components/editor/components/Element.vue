@@ -1,5 +1,12 @@
 <template>
-  <div class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
+  <template v-if="content.tag === 'input'">
+    <input class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)"/>
+  </template>
+  <template v-if="content.tag === 'img'">
+    <img class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)" :alt="computedAlt(content)" :src="computedSrc(content)"/>
+  </template>
+  <template v-else>
+    <div class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
     {{computedText(content)}}
     <template v-if="content.content.length">
       <Element v-for="(content, index) in content.content" :key="index" :is="computedTag(content)" :content="content"
@@ -7,6 +14,7 @@
       </Element>
     </template>
   </div>
+  </template>
 </template>
   
 <script>
@@ -71,7 +79,13 @@ export default {
     },
     computedText: function (content) {
       return content.text ? content.text : '';
-    }
+    },
+    computedAlt: function (content) { 
+      return content.attribute.alt ? content.attribute.alt : '';
+    },
+    computedSrc: function (content) { 
+      return content.attribute.src ? content.attribute.src : '';
+    },
   },
   components: {
     Element: import("./Element.vue"),
@@ -86,8 +100,5 @@ export default {
 <style>
 .element:hover, .element.active {
     outline: 2px dashed red;
-}
-.element.active{
-  padding: 5px;
 }
 </style>

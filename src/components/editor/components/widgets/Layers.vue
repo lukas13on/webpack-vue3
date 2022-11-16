@@ -8,7 +8,10 @@
                         <label><b>Camada principal</b></label>
                     </div>
                     <div class="col-auto my-auto">
-                        <button class="btn btn-dark w-100" @click="addNewLayer">
+                        <button class="btn btn-sm btn-warning me-2" @click="pasteLayer">
+                            <i class="fa fa-paste"></i>
+                        </button>
+                        <button class="btn btn-sm btn-dark" @click="addNewLayer">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>
@@ -38,7 +41,7 @@ export default {
         this.$emitter.on('sent-editor-content', this.receiveEditorContent);
     },
     methods: {
-        addNewLayer: function () { 
+        addNewLayer: function () {
             this.content.push({
                 label: '',
                 text: '',
@@ -57,7 +60,23 @@ export default {
             this.content = data;
             console.log(data);
         },
-        sentEditorContent: function () { 
+        pasteLayer: function () {
+            navigator.clipboard.readText()
+                .then(text => {
+                    var obj = JSON.parse(text);
+                    obj.uuid = uuidv4();
+                    obj.active = false;
+                    this.content.push(obj);
+                    this.sentEditorContent();
+                    //this.clipboard = text;
+                    console.log('Pasted content: ', text, obj);
+                })
+                .catch(err => {
+                    //this.clipboard = '';
+                    console.error('Failed to read clipboard contents: ', err);
+                });
+        },
+        sentEditorContent: function () {
             this.$emitter.emit('sent-editor-content', this.content);
             console.log('emited');
         }

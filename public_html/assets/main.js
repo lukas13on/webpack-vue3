@@ -13346,6 +13346,26 @@ function activeContentItem(items, id) {
     return res;
 }
 
+/**
+ * Remove o texto e o conteudo de tags autofechantes
+ * @param {*} items
+ */
+function normalizeSelfClosingElements(items) {
+    var res = [];
+    items.forEach(function (item) {
+        if (item.tag === 'input' || item.tag === 'img') {
+            delete item.content;
+            delete item.text;
+        } else {
+            if (item.content) {
+                item.content = normalizeSelfClosingElements(item.content);
+            }
+        }
+        res.push(item);
+    });
+    return res;
+}
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function () {
         return {
@@ -13362,6 +13382,7 @@ function activeContentItem(items, id) {
     },
     methods: {
         refreshContent: function () {
+            this.content = normalizeSelfClosingElements(this.content);
             this.$emitter.emit('sent-editor-content', this.content);
         },
         receivedChangedContents: function (data) {
@@ -13464,7 +13485,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     computedText: function (content) {
       return content.text ? content.text : '';
-    }
+    },
+    computedAlt: function (content) { 
+      return content.attribute.alt ? content.attribute.alt : '';
+    },
+    computedSrc: function (content) { 
+      return content.attribute.src ? content.attribute.src : '';
+    },
   },
   components: {
     Element: Promise.resolve(/*! import() */).then(__webpack_require__.bind(null, /*! ./Element.vue */ "./src/components/editor/components/Element.vue")),
@@ -13528,7 +13555,7 @@ __webpack_require__.r(__webpack_exports__);
       var self = this;
       setTimeout(function () {
         self.$refs.input.focus();
-      }, 150);
+      }, 50);
     },
     accordionButtonClass: function (content) {
       var standard = 'accordion-button';
@@ -13712,7 +13739,7 @@ __webpack_require__.r(__webpack_exports__);
         this.$emitter.on('sent-editor-content', this.receiveEditorContent);
     },
     methods: {
-        addNewLayer: function () { 
+        addNewLayer: function () {
             this.content.push({
                 label: '',
                 text: '',
@@ -13731,7 +13758,23 @@ __webpack_require__.r(__webpack_exports__);
             this.content = data;
             console.log(data);
         },
-        sentEditorContent: function () { 
+        pasteLayer: function () {
+            navigator.clipboard.readText()
+                .then(text => {
+                    var obj = JSON.parse(text);
+                    obj.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_0__["v4"])();
+                    obj.active = false;
+                    this.content.push(obj);
+                    this.sentEditorContent();
+                    //this.clipboard = text;
+                    console.log('Pasted content: ', text, obj);
+                })
+                .catch(err => {
+                    //this.clipboard = '';
+                    console.error('Failed to read clipboard contents: ', err);
+                });
+        },
+        sentEditorContent: function () {
             this.$emitter.emit('sent-editor-content', this.content);
             console.log('emited');
         }
@@ -14164,31 +14207,57 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const _hoisted_1 = ["is", "id"]
+const _hoisted_2 = ["is", "id", "alt", "src"]
+const _hoisted_3 = ["is", "id"]
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Element = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Element", true)
 
-  return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", {
-    class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
-    onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($event, $props.content))),
-    is: $options.computedTag($props.content),
-    id: $options.computedId($props.content),
-    style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
-  }, [
-    Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.computedText($props.content)) + " ", 1 /* TEXT */),
-    ($props.content.content.length)
-      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], { key: 0 }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
-          return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
-            key: index,
-            is: $options.computedTag(content),
-            content: content,
-            class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.computedClass(content)),
-            id: $options.computedId(content),
-            style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle(content))
-          }, null, 8 /* PROPS */, ["is", "content", "class", "id", "style"]))
-        }), 128 /* KEYED_FRAGMENT */))
-      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
-  ], 14 /* CLASS, STYLE, PROPS */, _hoisted_1))
+  return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, [
+    ($props.content.tag === 'input')
+      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("input", {
+          key: 0,
+          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
+          onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($event, $props.content))),
+          is: $options.computedTag($props.content),
+          id: $options.computedId($props.content),
+          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
+        }, null, 14 /* CLASS, STYLE, PROPS */, _hoisted_1))
+      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
+    ($props.content.tag === 'img')
+      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("img", {
+          key: 1,
+          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
+          onClick: _cache[1] || (_cache[1] = $event => ($options.handleButtonClick($event, $props.content))),
+          is: $options.computedTag($props.content),
+          id: $options.computedId($props.content),
+          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content)),
+          alt: $options.computedAlt($props.content),
+          src: $options.computedSrc($props.content)
+        }, null, 14 /* CLASS, STYLE, PROPS */, _hoisted_2))
+      : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", {
+          key: 2,
+          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
+          onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($event, $props.content))),
+          is: $options.computedTag($props.content),
+          id: $options.computedId($props.content),
+          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
+        }, [
+          Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.computedText($props.content)) + " ", 1 /* TEXT */),
+          ($props.content.content.length)
+            ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], { key: 0 }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
+                return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
+                  key: index,
+                  is: $options.computedTag(content),
+                  content: content,
+                  class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])($options.computedClass(content)),
+                  id: $options.computedId(content),
+                  style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle(content))
+                }, null, 8 /* PROPS */, ["is", "content", "class", "id", "style"]))
+              }), 128 /* KEYED_FRAGMENT */))
+            : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
+        ], 14 /* CLASS, STYLE, PROPS */, _hoisted_3))
+  ], 64 /* STABLE_FRAGMENT */))
 }
 
 /***/ }),
@@ -14288,7 +14357,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           ])
         ])
       ]),
-      ($props.content.content.length > 0)
+      ($props.content.content)
         ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_17, [
             (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content, index) => {
               return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
@@ -14370,25 +14439,40 @@ const _hoisted_2 = {
   class: "card"
 }
 const _hoisted_3 = { class: "card-body" }
-const _hoisted_4 = { class: "form-group" }
-const _hoisted_5 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Classe (Class)", -1 /* HOISTED */))
-const _hoisted_6 = { class: "form-group" }
-const _hoisted_7 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Identificação (Id)", -1 /* HOISTED */))
-const _hoisted_8 = { class: "form-group" }
-const _hoisted_9 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Elemento (Tag)", -1 /* HOISTED */))
-const _hoisted_10 = { class: "form-group" }
-const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Conteúdo (Text)", -1 /* HOISTED */))
-const _hoisted_12 = {
+const _hoisted_4 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("h4", null, "Básico", -1 /* HOISTED */))
+const _hoisted_5 = {
+  key: 0,
+  class: "form-group"
+}
+const _hoisted_6 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Texto (InnerText)", -1 /* HOISTED */))
+const _hoisted_7 = {
+  key: 1,
+  class: "form-group"
+}
+const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Imagem (Src)", -1 /* HOISTED */))
+const _hoisted_9 = {
+  key: 2,
+  class: "form-group"
+}
+const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Titulo alternativo (Alt)", -1 /* HOISTED */))
+const _hoisted_11 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("h4", null, "Avançado", -1 /* HOISTED */))
+const _hoisted_12 = { class: "form-group" }
+const _hoisted_13 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Elemento (Tag)", -1 /* HOISTED */))
+const _hoisted_14 = { class: "form-group" }
+const _hoisted_15 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Classe (Class)", -1 /* HOISTED */))
+const _hoisted_16 = { class: "form-group" }
+const _hoisted_17 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Identificação (Id)", -1 /* HOISTED */))
+const _hoisted_18 = {
   key: 1,
   class: "card"
 }
-const _hoisted_13 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", { class: "card-body" }, [
+const _hoisted_19 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", { class: "card-body" }, [
   /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("p", null, [
     /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("small", null, "Selecione uma camada")
   ])
 ], -1 /* HOISTED */))
-const _hoisted_14 = [
-  _hoisted_13
+const _hoisted_20 = [
+  _hoisted_19
 ]
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -14397,57 +14481,89 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     (_ctx.content.uuid)
       ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_2, [
           Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_3, [
-            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_4, [
-              _hoisted_5,
+            _hoisted_4,
+            (_ctx.content.tag !== 'input' && _ctx.content.tag !== 'img')
+              ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_5, [
+                  _hoisted_6,
+                  Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                    type: "text",
+                    class: "form-control",
+                    onKeyup: _cache[0] || (_cache[0] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                    "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => ((_ctx.content.text) = $event)),
+                    placeholder: "Texto do elemento"
+                  }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
+                    [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.text]
+                  ])
+                ]))
+              : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
+            (_ctx.content.tag === 'img')
+              ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_7, [
+                  _hoisted_8,
+                  Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                    type: "text",
+                    class: "form-control",
+                    onKeyup: _cache[2] || (_cache[2] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                    "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => ((_ctx.content.attribute.src) = $event)),
+                    placeholder: "URL da imagem"
+                  }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
+                    [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.src]
+                  ])
+                ]))
+              : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
+            (_ctx.content.tag === 'img')
+              ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_9, [
+                  _hoisted_10,
+                  Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                    type: "text",
+                    class: "form-control",
+                    onKeyup: _cache[4] || (_cache[4] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                    "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((_ctx.content.attribute.alt) = $event)),
+                    placeholder: "URL da imagem"
+                  }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
+                    [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.alt]
+                  ])
+                ]))
+              : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
+            _hoisted_11,
+            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_12, [
+              _hoisted_13,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
                 type: "text",
                 class: "form-control",
-                onKeyup: _cache[0] || (_cache[0] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => ((_ctx.content.attribute.class) = $event)),
-                placeholder: "Nome da classe"
-              }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
-                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.class]
-              ])
-            ]),
-            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_6, [
-              _hoisted_7,
-              Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
-                type: "text",
-                class: "form-control",
-                onKeyup: _cache[2] || (_cache[2] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => ((_ctx.content.attribute.id) = $event)),
-                placeholder: "Nome da identificação"
-              }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
-                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.id]
-              ])
-            ]),
-            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_8, [
-              _hoisted_9,
-              Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
-                type: "text",
-                class: "form-control",
-                onKeyup: _cache[4] || (_cache[4] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
-                "onUpdate:modelValue": _cache[5] || (_cache[5] = $event => ((_ctx.content.tag) = $event)),
+                onKeyup: _cache[6] || (_cache[6] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => ((_ctx.content.tag) = $event)),
                 placeholder: "Nome do elemento"
               }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
                 [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.tag]
               ])
             ]),
-            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_10, [
-              _hoisted_11,
+            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_14, [
+              _hoisted_15,
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
                 type: "text",
                 class: "form-control",
-                onKeyup: _cache[6] || (_cache[6] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
-                "onUpdate:modelValue": _cache[7] || (_cache[7] = $event => ((_ctx.content.text) = $event)),
-                placeholder: "Nome do elemento"
+                onKeyup: _cache[8] || (_cache[8] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                "onUpdate:modelValue": _cache[9] || (_cache[9] = $event => ((_ctx.content.attribute.class) = $event)),
+                placeholder: "Nome da classe"
               }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
-                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.text]
+                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.class]
+              ])
+            ]),
+            Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_16, [
+              _hoisted_17,
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
+                type: "text",
+                class: "form-control",
+                onKeyup: _cache[10] || (_cache[10] = (...args) => ($options.handdleContentChange && $options.handdleContentChange(...args))),
+                "onUpdate:modelValue": _cache[11] || (_cache[11] = $event => ((_ctx.content.attribute.id) = $event)),
+                placeholder: "Nome da identificação"
+              }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
+                [vue__WEBPACK_IMPORTED_MODULE_0__["vModelText"], _ctx.content.attribute.id]
               ])
             ])
           ])
         ]))
-      : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_12, _hoisted_14))
+      : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_18, _hoisted_20))
   ], 64 /* STABLE_FRAGMENT */))
 }
 
@@ -14478,11 +14594,15 @@ const _hoisted_6 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEB
   ])
 ], -1 /* HOISTED */))
 const _hoisted_7 = { class: "col-auto my-auto" }
-const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-paste" }, null, -1 /* HOISTED */))
 const _hoisted_9 = [
   _hoisted_8
 ]
-const _hoisted_10 = { class: "accordion" }
+const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_11 = [
+  _hoisted_10
+]
+const _hoisted_12 = { class: "accordion" }
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Layer = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Layer")
@@ -14496,15 +14616,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _hoisted_6,
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_7, [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
-                class: "btn btn-dark w-100",
-                onClick: _cache[0] || (_cache[0] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, _hoisted_9)
+                class: "btn btn-sm btn-warning me-2",
+                onClick: _cache[0] || (_cache[0] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
+              }, _hoisted_9),
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-sm btn-dark",
+                onClick: _cache[1] || (_cache[1] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+              }, _hoisted_11)
             ])
           ])
         ])
       ])
     ]),
-    Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_10, [
+    Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_12, [
       (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(_ctx.content, (value, key, index) => {
         return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
           key: index,

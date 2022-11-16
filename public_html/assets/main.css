@@ -2,9 +2,6 @@
 .element:hover, .element.active {
     outline: 2px dashed red;
 }
-.element.active{
-  padding: 5px;
-}
 
 @charset "UTF-8";
 /*!

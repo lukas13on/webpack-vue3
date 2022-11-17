@@ -4,9 +4,9 @@
       <button :class="accordionButtonClass(content)" @click="collapseContent">
         <span>{{ contentLabel(content) }}</span>
         <span class="emmet">
-          <span class="text-light">{{ content.tag }}</span>
-          <span class="text-warning">#{{ content.attribute.id }}</span>
-          <span class="text-highlight">.{{ content.attribute.class }}</span>
+          <span class="text-light">{{ computedEmmetTag(content) }}</span>
+          <span class="text-warning">{{ computedEmmetId(content) }}</span>
+          <span class="text-highlight">{{ computedEmmetClass(content) }}</span>
         </span>
       </button>
     </h2>
@@ -15,7 +15,8 @@
         <div class="form-group">
           <div class="form-group row">
             <div class="col my-auto">
-              <input ref="input" type="text" class="form-control" v-model="content.label" @click="handleButtonClick(content)" @keyup="sentEditorContent" />
+              <input ref="input" type="text" class="form-control" v-model="content.label"
+                @click="handleButtonClick(content)" @keyup="sentEditorContent" />
             </div>
             <div class="col-auto my-auto">
               <!--
@@ -62,7 +63,19 @@ export default {
       label: ''
     };
   },
+  computed: {
+
+  },
   methods: {
+    computedEmmetTag: function (content) {
+      return content.tag.length > 0 ?content.tag : '';
+    },
+    computedEmmetId: function (content) {
+      return content.attribute.id.length > 0 ?'#'+content.attribute.id : '';
+    },
+    computedEmmetClass: function (content) {
+      return content.attribute.class.length > 0 ?'.'+content.attribute.class : '';
+    },
     contentLabel: function (content) {
       var x = this;
       console.log(x.label, content.label);
@@ -180,17 +193,17 @@ input.form-control {
   cursor: pointer;
 }
 
-.accordion-button{
-  position:relative;
+.accordion-button {
+  position: relative;
 }
 
-.text-highlight{
-  color:chartreuse
+.text-highlight {
+  color: chartreuse
 }
 
-.emmet{
-  position:absolute;
-  bottom:6px;
+.emmet {
+  position: absolute;
+  bottom: 6px;
   font-size: 12px;
 }
 </style>

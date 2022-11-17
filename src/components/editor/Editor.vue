@@ -25,24 +25,25 @@ const lista = [
             backgroundColor: "#000000",
             color: "#ffffff",
             padding: "10px"
-        },
-        collapse: true,
-        active:true
+        }
     }
 ];
 
 /**
  * Coloca uma identificação em cada elemento da lista
  * @param {*} items Lista
+ * @param {*} parentUuid
  * @returns 
  */
-function identifyContentItems(items) {
+ function identifyContentItems(items, parentUuid) {
     var res = [];
     items.forEach(function (item) {
         item.uuid = uuidv4();
-        item.active = false;
+        if (parentUuid) { 
+            item.parent = parentUuid;
+        }
         if (item.content) {
-            item.content = identifyContentItems(item.content, item.id);
+            item.content = identifyContentItems(item.content, item.uuid);
         }
         res.push(item);
 

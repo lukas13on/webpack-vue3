@@ -3,6 +3,7 @@
   "scripts": {
     "serve-webpack": "npx webpack",
     "serve-static": "nodemon src/serve-static.js",
+    "devsec":"SET NODE_OPTIONS=--openssl-legacy-provider && npm run dev",
     "dev": "concurrently --kill-others \"npm run serve-webpack\" \"npm run serve-static\""
   },
   "dependencies": {

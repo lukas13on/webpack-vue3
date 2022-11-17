@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { nextTick } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import Element from '../editor/components/Element.vue';
 
@@ -22,9 +23,12 @@ const lista = [
         tag: "",
         style: {
             backgroundColor: "#000000",
-            color: "#ffffff"
-        }
-    },
+            color: "#ffffff",
+            padding: "10px"
+        },
+        collapse: true,
+        active:true
+    }
 ];
 
 /**
@@ -32,7 +36,7 @@ const lista = [
  * @param {*} items Lista
  * @returns 
  */
-function identifyContentItems(items, parentId) {
+function identifyContentItems(items) {
     var res = [];
     items.forEach(function (item) {
         item.uuid = uuidv4();
@@ -42,6 +46,19 @@ function identifyContentItems(items, parentId) {
         }
         res.push(item);
 
+    });
+    return res;
+}
+
+function prepareContentToSave(items) {
+    var res = [];
+    items.forEach(function (item) {
+        delete item.uuid;
+        delete item.active;
+        if (item.content) {
+            item.content = identifyContentItems(item.content, item.id);
+        }
+        res.push(item);
     });
     return res;
 }
@@ -132,7 +149,7 @@ export default {
     data: function () {
         return {
             content: identifyContentItems(lista),
-            clipboard: null
+            once: false
         };
     },
     mounted: function () {
@@ -141,8 +158,49 @@ export default {
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
         this.$emitter.on('sent-active-content', this.activeContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
+        this.$emitter.on('sent-open-content', this.openFileContent);
+        this.$emitter.on('sent-save-content', this.saveFileContent);
     },
     methods: {
+        openFileContent() {
+            var element = document.createElement('input');
+            element.setAttribute('type', 'file');
+            element.setAttribute('accept', 'application/json');
+
+            element.onchange = function () {
+                var file = this.files[0];
+                var fr = new FileReader();
+                function receivedText(event) {
+                    console.dir(event);
+                }
+                fr.onload = receivedText;
+                fr.onerror = function () {
+                    console.log('error');
+                };
+                fr.onabort = function () {
+                    console.log('aborted');
+                };
+                fr.readAsText(file);
+            };
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element);
+        },
+        saveFileContent: function () {
+            var element = document.createElement('a');
+            var text = JSON.stringify(prepareContentToSave(this.content));
+            element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', 'download.json');
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element);
+        },
         refreshContent: function () {
             this.content = normalizeSelfClosingElements(this.content);
             this.$emitter.emit('sent-editor-content', this.content);

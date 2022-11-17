@@ -8,10 +8,10 @@
                         <label><b>Camada principal</b></label>
                     </div>
                     <div class="col-auto my-auto">
-                        <button class="btn btn-sm btn-warning me-2" @click="pasteLayer">
+                        <button class="btn btn-sm btn-dark me-2" @click="pasteLayer">
                             <i class="fa fa-paste"></i>
                         </button>
-                        <button class="btn btn-sm btn-dark" @click="addNewLayer">
+                        <button class="btn btn-sm btn-primary" @click="addNewLayer">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>

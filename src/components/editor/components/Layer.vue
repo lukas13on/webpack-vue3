@@ -1,7 +1,14 @@
 <template>
   <div class="accordion-item">
     <h2 class="accordion-header">
-      <button :class="accordionButtonClass(content)" @click="collapseContent">{{ contentLabel(content) }}</button>
+      <button :class="accordionButtonClass(content)" @click="collapseContent">
+        <span>{{ contentLabel(content) }}</span>
+        <span class="emmet">
+          <span class="text-light">{{ content.tag }}</span>
+          <span class="text-warning">#{{ content.attribute.id }}</span>
+          <span class="text-highlight">.{{ content.attribute.class }}</span>
+        </span>
+      </button>
     </h2>
     <div :class="accordionCollapseClass(content)">
       <div class="px-4 py-2">
@@ -16,10 +23,10 @@
                 <i class="fa fa-edit"></i>
               </button>
               -->
-              <button class="btn btn-sm btn-primary me-2" @click="copyLayer">
+              <button class="btn btn-sm btn-success me-2" @click="copyLayer">
                 <i class="fa fa-copy"></i>
               </button>
-              <button class="btn btn-sm btn-warning me-2" @click="pasteLayer">
+              <button class="btn btn-sm btn-dark me-2" @click="pasteLayer">
                 <i class="fa fa-paste"></i>
               </button>
               <button class="btn btn-sm btn-secondary me-2 disabled">
@@ -28,7 +35,7 @@
               <button class="btn btn-sm btn-danger me-2" @click="deleteLayer">
                 <i class="fa fa-times"></i>
               </button>
-              <button class="btn btn-sm btn-dark" @click="addNewLayer">
+              <button class="btn btn-sm btn-primary" @click="addNewLayer">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -171,5 +178,19 @@ export default {
 
 input.form-control {
   cursor: pointer;
+}
+
+.accordion-button{
+  position:relative;
+}
+
+.text-highlight{
+  color:chartreuse
+}
+
+.emmet{
+  position:absolute;
+  bottom:6px;
+  font-size: 12px;
 }
 </style>

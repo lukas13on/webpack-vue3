@@ -11,7 +11,7 @@
       </button>
     </h2>
     <div :class="accordionCollapseClass(content)">
-      <div class="px-4 py-2">
+      <div class="px-4 py-2 action-content">
         <div class="form-group">
           <div class="form-group row">
             <div class="col my-auto">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-body" v-if="content.content">
+      <div class="accordion-body" :class="accordionBodyClass(content)" v-if="content.content">
         <Layer v-for="(content, index) in content.content" :key="index" :content="content">
         </Layer>
       </div>
@@ -67,14 +67,21 @@ export default {
 
   },
   methods: {
+    accordionBodyClass: function (content) { 
+      if (content.content.length > 0) {
+        return 'has-content';
+      } else { 
+        return 'no-content';
+      }
+    },
     computedEmmetTag: function (content) {
-      return content.tag.length > 0 ?content.tag : '';
+      return content.tag.length > 0 ? content.tag : 'div';
     },
     computedEmmetId: function (content) {
-      return content.attribute.id.length > 0 ?'#'+content.attribute.id : '';
+      return content.attribute.id.length > 0 ? '#' + content.attribute.id : '';
     },
     computedEmmetClass: function (content) {
-      return content.attribute.class.length > 0 ?'.'+content.attribute.class : '';
+      return content.attribute.class.length > 0 ? '.' + content.attribute.class : '';
     },
     contentLabel: function (content) {
       var x = this;
@@ -113,6 +120,9 @@ export default {
     },
     accordionCollapseClass: function (content) {
       var standard = 'accordion-collapse';
+      if (content.active) {
+        standard += ' active';
+      }
       return this.collapse === true ? standard + ' show' : standard + ' collapse';
     },
     addNewLayer: function () {
@@ -205,5 +215,28 @@ input.form-control {
   position: absolute;
   bottom: 6px;
   font-size: 12px;
+}
+</style>
+
+<style scoped>
+.accordion-collapse.show:not(.active) .action-content {
+    display: none;
+}
+
+.accordion-collapse.show:not(.active) .accordion-body {
+    padding:0px;
+    border-left: 2px solid #0d6efd;
+    border-top: 1px solid #0d6efd;
+    border-bottom:1px solid #0d6efd;
+    border-right: 1px solid #0d6efd;
+    border-radius: 0.375rem;
+}
+
+.accordion-collapse.show.active .action-content {
+    display: block;
+}
+
+.accordion-body.no-content {
+    display: none;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <h2>Camadas</h2>
+    <h5 class="text-primary fw-bold">Camadas</h5>
     <div class="card">
         <div class="card-body">
             <div class="form-group">

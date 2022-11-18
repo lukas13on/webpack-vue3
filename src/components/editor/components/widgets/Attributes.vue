@@ -1,8 +1,8 @@
 <template>
-    <h3>Atributos</h3>
+    <h5 class="text-primary fw-bold">Atributos</h5>
     <div v-if="content.uuid" class="card">
         <div class="card-body">
-            <h4>Básico</h4>
+            <h6 class="text-secondary fw-bold">Básico</h6>
             <div class="form-group" v-if="content.tag !== 'input' && content.tag !== 'img'">
                 <label>Texto (InnerText)</label>
                 <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.text"
@@ -18,7 +18,8 @@
                 <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.attribute.alt"
                     placeholder="URL da imagem" />
             </div>
-            <h4>Avançado</h4>
+            <hr class="mb-1"/>
+            <h6 class="text-secondary fw-bold">Avançado</h6>
             <div class="form-group">
                 <label>Elemento (Tag)</label>
                 <input type="text" class="form-control" @keyup="handdleContentChange" v-model="content.tag"
@@ -75,6 +76,7 @@ export default {
 
 <style scoped>
 label {
+    font-weight: bold;;
     display: block;
     width: 100%;
 }

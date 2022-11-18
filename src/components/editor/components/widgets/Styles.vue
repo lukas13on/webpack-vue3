@@ -1,12 +1,12 @@
 <template>
-    <h3>Estilos</h3>
+    <h5 class="text-primary fw-bold">Estilos</h5>
     <div v-if="content.uuid" class="card">
         <div class="card-body">
             <div class="row mb-2">
                 <div class="form-group col-auto">
                     <select class="form-control" v-model="add.valueId" @change="changedValueId(add.valueId)">
                         <option disabled :value="null">Selecione uma opção</option>
-                        <option v-for="(value, index) in add.valueIds" v-bind:value="value">{{ value }}</option>
+                        <option v-for="(value, index) in add.valueIds" v-bind:key="index" v-bind:value="value">{{ value }}</option>
                     </select>
                 </div>
                 <div class="col">

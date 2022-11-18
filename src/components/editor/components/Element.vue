@@ -1,15 +1,15 @@
 <template>
   <template v-if="content.tag === 'input'">
-    <input class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)"/>
+    <input class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)"/>
   </template>
   <template v-if="content.tag === 'img'">
-    <img class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)" :alt="computedAlt(content)" :src="computedSrc(content)"/>
+    <img class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)" :alt="computedAlt(content)" :src="computedSrc(content)"/>
   </template>
   <template v-else>
-    <div class="element" @click="handleButtonClick($event, content)" :is="computedTag(content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
+    <div class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
     {{computedText(content)}}
     <template v-if="content.content.length">
-      <Element v-for="(content, index) in content.content" :key="index" :is="computedTag(content)" :content="content"
+      <Element v-for="content in content.content" v-bind:key="content.uuid" :content="content"
         :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
       </Element>
     </template>

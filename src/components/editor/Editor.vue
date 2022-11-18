@@ -46,7 +46,6 @@ const lista = [
             item.content = identifyContentItems(item.content, item.uuid);
         }
         res.push(item);
-
     });
     return res;
 }
@@ -164,6 +163,7 @@ export default {
     },
     methods: {
         openFileContent() {
+            var self = this;
             var element = document.createElement('input');
             element.setAttribute('type', 'file');
             element.setAttribute('accept', 'application/json');
@@ -172,7 +172,11 @@ export default {
                 var file = this.files[0];
                 var fr = new FileReader();
                 function receivedText(event) {
-                    console.dir(event);
+                    var result = event.target.result;
+                    var obj = JSON.parse(result);
+                    obj = identifyContentItems(obj);
+                    //console.log(event, result, obj);
+                    self.$emitter.emit('sent-editor-content', obj);
                 }
                 fr.onload = receivedText;
                 fr.onerror = function () {

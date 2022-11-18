@@ -225,7 +225,7 @@ input.form-control {
 
 .accordion-collapse.show:not(.active) .accordion-body {
     padding:0px;
-    border-left: 2px solid #0d6efd;
+    border-left: 1px solid #0d6efd;
     border-top: 1px solid #0d6efd;
     border-bottom:1px solid #0d6efd;
     border-right: 1px solid #0d6efd;

@@ -14460,7 +14460,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           alt: $options.computedAlt($props.content),
           src: $options.computedSrc($props.content)
         }, null, 14 /* CLASS, STYLE, PROPS */, _hoisted_2))
-      : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", {
+      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
+    ($props.content.tag !== 'input' && $props.content.tag !== 'img')
+      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", {
           key: 2,
           class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
           onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($event, $props.content))),
@@ -14468,7 +14470,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
         }, [
           Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.computedText($props.content)) + " ", 1 /* TEXT */),
-          ($props.content.content.length)
+          ($props.content.content)
             ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], { key: 0 }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content) => {
                 return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
                   key: content.uuid,
@@ -14480,6 +14482,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               }), 128 /* KEYED_FRAGMENT */))
             : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
         ], 14 /* CLASS, STYLE, PROPS */, _hoisted_3))
+      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
   ], 64 /* STABLE_FRAGMENT */))
 }
 

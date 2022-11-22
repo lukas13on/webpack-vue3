@@ -5,10 +5,10 @@
   <template v-if="content.tag === 'img'">
     <img class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)" :alt="computedAlt(content)" :src="computedSrc(content)"/>
   </template>
-  <template v-else>
+  <template v-if="content.tag !== 'input' && content.tag !== 'img'">
     <div class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
     {{computedText(content)}}
-    <template v-if="content.content.length">
+    <template v-if="content.content">
       <Element v-for="content in content.content" v-bind:key="content.uuid" :content="content"
         :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
       </Element>
@@ -99,9 +99,9 @@ export default {
 </script>
 <style>
 .element:hover {
-    outline: 1px dashed red;
+    outline: 1px dashed red !important;
 }
 .element.active {
-    outline: 2px dashed red;
+    outline: 2px dashed red !important;
 }
 </style>

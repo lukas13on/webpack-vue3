@@ -1,9 +1,9 @@
 
 .element:hover {
-    outline: 1px dashed red;
+    outline: 1px dashed red !important;
 }
 .element.active {
-    outline: 2px dashed red;
+    outline: 2px dashed red !important;
 }
 
 @charset "UTF-8";
@@ -13260,7 +13260,7 @@ input.form-control[data-v-5cd84a7a] {
 } */
 .accordion-collapse.show:not(.active) .accordion-body[data-v-5cd84a7a] {
   padding: 0px;
-  border-left: 4px solid #0a58ca;
+  border-left: 6px solid #0d6efd;
 }
 .accordion-button[data-v-5cd84a7a],
 .accordion-header[data-v-5cd84a7a],

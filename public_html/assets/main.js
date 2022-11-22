@@ -13310,11 +13310,11 @@ const lista = [
  * @param {*} parentUuid
  * @returns 
  */
- function identifyContentItems(items, parentUuid) {
+function identifyContentItems(items, parentUuid) {
     var res = [];
     items.forEach(function (item) {
         item.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_1__["v4"])();
-        if (parentUuid) { 
+        if (parentUuid) {
             item.parent = parentUuid;
         }
         if (item.content) {
@@ -13323,6 +13323,21 @@ const lista = [
         res.push(item);
     });
     return res;
+}
+
+function identifyClonedItem(item, parentUuid) {
+    if (!parentUuid) {
+        item = JSON.parse(JSON.stringify(item));
+    }
+    item.uuid = Object(uuid__WEBPACK_IMPORTED_MODULE_1__["v4"])();
+    item.active = false;
+    if (parentUuid) {
+        item.parent = parentUuid;
+    }
+    if (item.content) {
+        item.content = identifyContentItems(item.content, item.uuid);
+    }
+    return item;
 }
 
 function prepareContentToSave(items) {
@@ -13340,10 +13355,10 @@ function prepareContentToSave(items) {
 
 /**
  * Substitui um elemento da lista por outro valor
- * @param {*} replace Valor
- * @param {*} items Lista
- * @param {*} id Identificação
- * @returns 
+ * @param {*} replace camada substituta
+ * @param {*} items camadas
+ * @param {*} id camada alvo
+ * @returns {*}
  */
 function replaceContentItem(replace, items, id) {
     var res = [];
@@ -13363,7 +13378,7 @@ function replaceContentItem(replace, items, id) {
 /**
  * Remove um elemento da lista pela identificacao
  * @param {*} items 
- * @param {*} id 
+ * @param {*} id camada alvo
  * @returns 
  */
 function removeContentItem(items, id) {
@@ -13381,8 +13396,8 @@ function removeContentItem(items, id) {
 
 /**
  * Ativa um elemento da lista pela identificacao
- * @param {*} items 
- * @param {*} id 
+ * @param {*} items camadas
+ * @param {*} id camada alvo
  */
 function activeContentItem(items, id) {
     var res = [];
@@ -13400,9 +13415,51 @@ function activeContentItem(items, id) {
     return res;
 }
 
+
+/**
+ * Desativa todos os elementos da lista
+ * @param {*} items camadas
+ */
+function unactiveContent(items) {
+    var res = [];
+    items.forEach(function (item) {
+        if (item.content) {
+            item.content = unactiveContent(item.content);
+        }
+        item.active = false;
+        res.push(item);
+    });
+    return res;
+}
+
+/**
+ * 
+ * @param {*} items camadas
+ * @param {*} _item camada clone
+ * @param {*} id camada alvo
+ */
+function cloneContent(items, _item, id) {
+    //console.log(_item);
+    if (!id) {
+        items.push(_item);
+    }
+    var res = [];
+    items.forEach(function (item) {
+        //console.log(item)
+        if (item.uuid === id) {
+            item.content.push(_item);
+        }
+        if (item.content && id) {
+            item.content = cloneContent(item.content, _item, id);
+        }
+        res.push(item);
+    });
+    return res;
+}
+
 /**
  * Remove o texto e o conteudo de tags autofechantes
- * @param {*} items
+ * @param {*} items camadas
  */
 function normalizeSelfClosingElements(items) {
     var res = [];
@@ -13432,6 +13489,8 @@ function normalizeSelfClosingElements(items) {
         this.$emitter.on('sent-editor-content', this.receivedContent);
         this.$emitter.on('sent-changed-content', this.receivedChangedContents);
         this.$emitter.on('sent-active-content', this.activeContent);
+        this.$emitter.on('sent-unactive-content', this.unactiveContent);
+        this.$emitter.on('sent-clone-content', this.cloneContent);
         this.$emitter.on('sent-remove-content', this.removeContent);
         this.$emitter.on('sent-open-content', this.openFileContent);
         this.$emitter.on('sent-save-content', this.saveFileContent);
@@ -13498,6 +13557,16 @@ function normalizeSelfClosingElements(items) {
         activeContent: function (data) {
             console.log('sent-active-content', data);
             this.content = activeContentItem(this.content, data.id);
+            this.refreshContent();
+        },
+        unactiveContent: function (data) {
+            console.log('sent-active-content', data);
+            this.content = unactiveContent(this.content);
+            this.refreshContent();
+        },
+        cloneContent: function (data) {
+            console.log('sent-clone-content', data);
+            this.content = cloneContent(this.content, identifyClonedItem(data.content), data.id);
             this.refreshContent();
         },
         receivedContent: function (content) {
@@ -13632,10 +13701,10 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   methods: {
-    accordionBodyClass: function (content) { 
+    accordionBodyClass: function (content) {
       if (content.content.length > 0) {
         return 'has-content';
-      } else { 
+      } else {
         return 'no-content';
       }
     },
@@ -13663,11 +13732,15 @@ __webpack_require__.r(__webpack_exports__);
       this.$emitter.emit('sent-active-content', { id: this.content.uuid });
     },
     collapseContent: function () {
-      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
-      this.$emitter.emit('sent-attributes-content', this.content);
       this.collapse = this.collapse ? false : true;
       if (this.collapse) {
+        this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+        this.$emitter.emit('sent-attributes-content', this.content);
         this.focusLabelInput();
+      } else {
+        // remove o active de todos
+        this.$emitter.emit('sent-unactive-content', {});
+        //this.$emitter.emit('sent-attributes-content', {});
       }
     },
     focusLabelInput: function () {
@@ -13736,6 +13809,9 @@ __webpack_require__.r(__webpack_exports__);
           //this.clipboard = '';
           console.error('Failed to read clipboard contents: ', err);
         });
+    },
+    cloneLayer: function (content) {
+      this.$emitter.emit('sent-clone-content', { content: content, id: this.content.parent });
     },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
@@ -14426,9 +14502,9 @@ const _withScopeId = n => (Object(vue__WEBPACK_IMPORTED_MODULE_0__["pushScopeId"
 const _hoisted_1 = { class: "accordion-item" }
 const _hoisted_2 = { class: "accordion-header" }
 const _hoisted_3 = { class: "emmet" }
-const _hoisted_4 = { class: "text-light" }
-const _hoisted_5 = { class: "text-warning" }
-const _hoisted_6 = { class: "text-highlight" }
+const _hoisted_4 = { class: "tag" }
+const _hoisted_5 = { class: "id" }
+const _hoisted_6 = { class: "class" }
 const _hoisted_7 = { class: "px-4 py-2 action-content" }
 const _hoisted_8 = { class: "form-group" }
 const _hoisted_9 = { class: "form-group row" }
@@ -14442,16 +14518,17 @@ const _hoisted_14 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WE
 const _hoisted_15 = [
   _hoisted_14
 ]
-const _hoisted_16 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", { class: "btn btn-sm btn-secondary me-2 disabled" }, [
-  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-clone" })
-], -1 /* HOISTED */))
-const _hoisted_17 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
-const _hoisted_18 = [
-  _hoisted_17
+const _hoisted_16 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-clone" }, null, -1 /* HOISTED */))
+const _hoisted_17 = [
+  _hoisted_16
 ]
-const _hoisted_19 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
-const _hoisted_20 = [
-  _hoisted_19
+const _hoisted_18 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-times" }, null, -1 /* HOISTED */))
+const _hoisted_19 = [
+  _hoisted_18
+]
+const _hoisted_20 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-plus" }, null, -1 /* HOISTED */))
+const _hoisted_21 = [
+  _hoisted_20
 ]
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -14493,21 +14570,29 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("\r\n              <button class=\"btn btn-info text-white me-2\" @click=\"handleButtonClick(content, collapse)\">\r\n                <i class=\"fa fa-edit\"></i>\r\n              </button>\r\n              "),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-success me-2",
-                onClick: _cache[4] || (_cache[4] = (...args) => ($options.copyLayer && $options.copyLayer(...args)))
+                onClick: _cache[4] || (_cache[4] = (...args) => ($options.copyLayer && $options.copyLayer(...args))),
+                title: "Copiar camada"
               }, _hoisted_13),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-dark me-2",
-                onClick: _cache[5] || (_cache[5] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
+                onClick: _cache[5] || (_cache[5] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args))),
+                title: "Colar"
               }, _hoisted_15),
-              _hoisted_16,
+              Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
+                class: "btn btn-sm btn-secondary me-2",
+                title: "Duplicar camada",
+                onClick: _cache[6] || (_cache[6] = $event => ($options.cloneLayer($props.content)))
+              }, _hoisted_17),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-danger me-2",
-                onClick: _cache[6] || (_cache[6] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args)))
-              }, _hoisted_18),
+                onClick: _cache[7] || (_cache[7] = (...args) => ($options.deleteLayer && $options.deleteLayer(...args))),
+                title: "Apagar camada"
+              }, _hoisted_19),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-primary",
-                onClick: _cache[7] || (_cache[7] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
-              }, _hoisted_20)
+                onClick: _cache[8] || (_cache[8] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args))),
+                title: "Adicionar camada"
+              }, _hoisted_21)
             ])
           ])
         ])
@@ -14744,14 +14829,12 @@ __webpack_require__.r(__webpack_exports__);
 
 const _withScopeId = n => (Object(vue__WEBPACK_IMPORTED_MODULE_0__["pushScopeId"])("data-v-0353136e"),n=n(),Object(vue__WEBPACK_IMPORTED_MODULE_0__["popScopeId"])(),n)
 const _hoisted_1 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("h5", { class: "text-primary fw-bold" }, "Camadas", -1 /* HOISTED */))
-const _hoisted_2 = { class: "card" }
+const _hoisted_2 = { class: "card mb-2" }
 const _hoisted_3 = { class: "card-body" }
 const _hoisted_4 = { class: "form-group" }
 const _hoisted_5 = { class: "form-group row" }
 const _hoisted_6 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", { class: "col my-auto" }, [
-  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, [
-    /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("b", null, "Camada principal")
-  ])
+  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("label", null, "Documento")
 ], -1 /* HOISTED */))
 const _hoisted_7 = { class: "col-auto my-auto" }
 const _hoisted_8 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-paste" }, null, -1 /* HOISTED */))
@@ -14762,7 +14845,19 @@ const _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WE
 const _hoisted_11 = [
   _hoisted_10
 ]
-const _hoisted_12 = { class: "accordion" }
+const _hoisted_12 = { class: "card" }
+const _hoisted_13 = { class: "card-body" }
+const _hoisted_14 = {
+  key: 0,
+  class: "accordion"
+}
+const _hoisted_15 = { key: 1 }
+const _hoisted_16 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("p", null, [
+  /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("small", null, "Nenhuma camada")
+], -1 /* HOISTED */))
+const _hoisted_17 = [
+  _hoisted_16
+]
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Layer = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Layer")
@@ -14777,11 +14872,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_7, [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-dark me-2",
-                onClick: _cache[0] || (_cache[0] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args)))
+                onClick: _cache[0] || (_cache[0] = (...args) => ($options.pasteLayer && $options.pasteLayer(...args))),
+                title: "Colar"
               }, _hoisted_9),
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("button", {
                 class: "btn btn-sm btn-primary",
-                onClick: _cache[1] || (_cache[1] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args)))
+                onClick: _cache[1] || (_cache[1] = (...args) => ($options.addNewLayer && $options.addNewLayer(...args))),
+                title: "Adicionar camada"
               }, _hoisted_11)
             ])
           ])
@@ -14789,12 +14886,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ])
     ]),
     Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_12, [
-      (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(_ctx.content, (value, key, index) => {
-        return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
-          key: index,
-          content: value
-        }, null, 8 /* PROPS */, ["content"]))
-      }), 128 /* KEYED_FRAGMENT */))
+      Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("div", _hoisted_13, [
+        (_ctx.content.length > 0)
+          ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_14, [
+              (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])(_ctx.content, (value, key, index) => {
+                return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Layer, {
+                  key: index,
+                  content: value
+                }, null, 8 /* PROPS */, ["content"]))
+              }), 128 /* KEYED_FRAGMENT */))
+            ]))
+          : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", _hoisted_15, _hoisted_17))
+      ])
     ])
   ], 64 /* STABLE_FRAGMENT */))
 }

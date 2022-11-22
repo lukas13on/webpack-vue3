@@ -1,17 +1,17 @@
 <template>
     <h5 class="text-primary fw-bold">Camadas</h5>
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body">
             <div class="form-group">
                 <div class="form-group row">
                     <div class="col my-auto">
-                        <label><b>Camada principal</b></label>
+                        <label>Documento</label>
                     </div>
                     <div class="col-auto my-auto">
-                        <button class="btn btn-sm btn-dark me-2" @click="pasteLayer">
+                        <button class="btn btn-sm btn-dark me-2" @click="pasteLayer" title="Colar">
                             <i class="fa fa-paste"></i>
                         </button>
-                        <button class="btn btn-sm btn-primary" @click="addNewLayer">
+                        <button class="btn btn-sm btn-primary" @click="addNewLayer" title="Adicionar camada">
                             <i class="fa fa-plus"></i>
                         </button>
                     </div>
@@ -19,9 +19,16 @@
             </div>
         </div>
     </div>
-    <div class="accordion">
-        <Layer v-for="(value, key, index) in content" :key="index" :content="value">
-        </Layer>
+    <div class="card">
+        <div class="card-body">
+            <div class="accordion" v-if="content.length > 0">
+                <Layer v-for="(value, key, index) in content" :key="index" :content="value">
+                </Layer>
+            </div>
+            <div v-else>
+                <p><small>Nenhuma camada</small></p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -92,5 +99,6 @@ export default {
 label {
     display: block;
     width: 100%;
+    font-weight:bold;
 }
 </style>

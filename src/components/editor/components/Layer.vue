@@ -4,9 +4,9 @@
       <button :class="accordionButtonClass(content)" @click="collapseContent">
         <span>{{ contentLabel(content) }}</span>
         <span class="emmet">
-          <span class="text-light">{{ computedEmmetTag(content) }}</span>
-          <span class="text-warning">{{ computedEmmetId(content) }}</span>
-          <span class="text-highlight">{{ computedEmmetClass(content) }}</span>
+          <span class="tag">{{ computedEmmetTag(content) }}</span>
+          <span class="id">{{ computedEmmetId(content) }}</span>
+          <span class="class">{{ computedEmmetClass(content) }}</span>
         </span>
       </button>
     </h2>
@@ -24,19 +24,19 @@
                 <i class="fa fa-edit"></i>
               </button>
               -->
-              <button class="btn btn-sm btn-success me-2" @click="copyLayer">
+              <button class="btn btn-sm btn-success me-2" @click="copyLayer" title="Copiar camada">
                 <i class="fa fa-copy"></i>
               </button>
-              <button class="btn btn-sm btn-dark me-2" @click="pasteLayer">
+              <button class="btn btn-sm btn-dark me-2" @click="pasteLayer" title="Colar">
                 <i class="fa fa-paste"></i>
               </button>
-              <button class="btn btn-sm btn-secondary me-2 disabled">
+              <button class="btn btn-sm btn-secondary me-2" title="Duplicar camada" @click="cloneLayer(content)">
                 <i class="fa fa-clone"></i>
               </button>
-              <button class="btn btn-sm btn-danger me-2" @click="deleteLayer">
+              <button class="btn btn-sm btn-danger me-2" @click="deleteLayer" title="Apagar camada">
                 <i class="fa fa-times"></i>
               </button>
-              <button class="btn btn-sm btn-primary" @click="addNewLayer">
+              <button class="btn btn-sm btn-primary" @click="addNewLayer" title="Adicionar camada">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -67,10 +67,10 @@ export default {
 
   },
   methods: {
-    accordionBodyClass: function (content) { 
+    accordionBodyClass: function (content) {
       if (content.content.length > 0) {
         return 'has-content';
-      } else { 
+      } else {
         return 'no-content';
       }
     },
@@ -98,11 +98,15 @@ export default {
       this.$emitter.emit('sent-active-content', { id: this.content.uuid });
     },
     collapseContent: function () {
-      this.$emitter.emit('sent-active-content', { id: this.content.uuid });
-      this.$emitter.emit('sent-attributes-content', this.content);
       this.collapse = this.collapse ? false : true;
       if (this.collapse) {
+        this.$emitter.emit('sent-active-content', { id: this.content.uuid });
+        this.$emitter.emit('sent-attributes-content', this.content);
         this.focusLabelInput();
+      } else {
+        // remove o active de todos
+        this.$emitter.emit('sent-unactive-content', {});
+        //this.$emitter.emit('sent-attributes-content', {});
       }
     },
     focusLabelInput: function () {
@@ -172,6 +176,9 @@ export default {
           console.error('Failed to read clipboard contents: ', err);
         });
     },
+    cloneLayer: function (content) {
+      this.$emitter.emit('sent-clone-content', { content: content, id: this.content.parent });
+    },
     sentEditorContent: function () {
       this.$emitter.emit('sent-changed-content', { content: this.content, id: this.content.uuid });
     },
@@ -219,24 +226,24 @@ input.form-control {
 </style>
 
 <style scoped>
-.accordion-collapse.show:not(.active) .action-content {
-    display: none;
-}
+/* .accordion-collapse.show:not(.active) .accordion-body {
+  padding: 0px;
+  border-left: 1px solid #0d6efd;
+  border-top: 1px solid #0d6efd;
+  border-bottom: 1px solid #0d6efd;
+  border-right: 1px solid #0d6efd;
+  border-radius: 0.375rem;
+} */
 
 .accordion-collapse.show:not(.active) .accordion-body {
-    padding:0px;
-    border-left: 1px solid #0d6efd;
-    border-top: 1px solid #0d6efd;
-    border-bottom:1px solid #0d6efd;
-    border-right: 1px solid #0d6efd;
-    border-radius: 0.375rem;
+  padding: 0px;
+  border-left: 4px solid #0a58ca;
 }
 
-.accordion-collapse.show.active .action-content {
-    display: block;
-}
-
-.accordion-body.no-content {
-    display: none;
+.accordion-button,
+.accordion-header,
+.accordion,
+.accordion-item {
+  border-radius: 0 !important;
 }
 </style>

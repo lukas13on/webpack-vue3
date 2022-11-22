@@ -100,10 +100,8 @@ export default {
 <style>
 .element:hover {
     outline: 1px dashed red;
-    margin-bottom: 1px !important;
 }
 .element.active {
     outline: 2px dashed red;
-    margin-bottom: 2px !important;
 }
 </style>

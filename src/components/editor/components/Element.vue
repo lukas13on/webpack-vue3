@@ -1,24 +1,39 @@
 <template>
-  <template v-if="content.tag === 'input'">
-    <input class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)"/>
+  <template v-if="isSelfClosingElement(content.tag)">
+    <component :is="content.tag" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
+      :class="computedClass(content)" :style="computedStyle(content)" :src="computedSrc(content)"/>
   </template>
-  <template v-if="content.tag === 'img'">
-    <img class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)" :alt="computedAlt(content)" :src="computedSrc(content)"/>
-  </template>
-  <template v-if="content.tag !== 'input' && content.tag !== 'img'">
-    <div class="element" @click="handleButtonClick($event, content)" :id="computedId(content)" :class="computedClass(content)" :style="computedStyle(content)">
-    {{computedText(content)}}
-    <template v-if="content.content">
-      <Element v-for="content in content.content" v-bind:key="content.uuid" :content="content"
-        :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
-      </Element>
-    </template>
-  </div>
+  <template v-else>
+    <component :is="content.tag" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
+      :class="computedClass(content)" :style="computedStyle(content)">
+      <template v-if="content.content">
+        <Element v-for="content in content.content" v-bind:key="content.uuid" :content="content"
+          :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">
+        </Element>
+      </template>
+    </component>
   </template>
 </template>
   
 <script>
 import elementStyleAttrs from '../../../app/extract/elementStyleAttrs.js';
+
+const selfClosingElements = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr'
+];
 
 export default {
   name: "Element",
@@ -36,6 +51,9 @@ export default {
     },
     jsonData: function (a) {
       return JSON.stringify(a)
+    },
+    isSelfClosingElement: function (tag) { 
+      return selfClosingElements.indexOf(tag) !== -1;
     },
     computedStyle: function (content) {
 
@@ -80,10 +98,10 @@ export default {
     computedText: function (content) {
       return content.text ? content.text : '';
     },
-    computedAlt: function (content) { 
+    computedAlt: function (content) {
       return content.attribute.alt ? content.attribute.alt : '';
     },
-    computedSrc: function (content) { 
+    computedSrc: function (content) {
       return content.attribute.src ? content.attribute.src : '';
     },
   },
@@ -99,9 +117,10 @@ export default {
 </script>
 <style>
 .element:hover {
-    outline: 1px dashed red !important;
+  outline: 1px dashed red !important;
 }
+
 .element.active {
-    outline: 2px dashed red !important;
+  outline: 2px dashed red !important;
 }
 </style>

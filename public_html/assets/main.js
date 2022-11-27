@@ -13595,6 +13595,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const selfClosingElements = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr'
+];
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Element",
   props: ["content"],
@@ -13611,6 +13628,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     jsonData: function (a) {
       return JSON.stringify(a)
+    },
+    isSelfClosingElement: function (tag) { 
+      return selfClosingElements.indexOf(tag) !== -1;
     },
     computedStyle: function (content) {
 
@@ -13655,10 +13675,10 @@ __webpack_require__.r(__webpack_exports__);
     computedText: function (content) {
       return content.text ? content.text : '';
     },
-    computedAlt: function (content) { 
+    computedAlt: function (content) {
       return content.attribute.alt ? content.attribute.alt : '';
     },
-    computedSrc: function (content) { 
+    computedSrc: function (content) {
       return content.attribute.src ? content.attribute.src : '';
     },
   },
@@ -14114,6 +14134,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       Object(vue__WEBPACK_IMPORTED_MODULE_0__["createVNode"])(_component_Header),
       Object(vue__WEBPACK_IMPORTED_MODULE_0__["createVNode"])(_component_Aside, null, {
         default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+          Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("<component is=\"h1\" class=\"display-1\"> anything inside component </component>"),
           Object(vue__WEBPACK_IMPORTED_MODULE_0__["createVNode"])(_component_Widgets, null, {
             default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["createVNode"])(_component_Widget, null, {
@@ -14433,43 +14454,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/@vue/runtime-dom/dist/runtime-dom.esm-bundler.js");
 
 
-const _hoisted_1 = ["id"]
-const _hoisted_2 = ["id", "alt", "src"]
-const _hoisted_3 = ["id"]
-
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Element = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Element", true)
 
-  return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, [
-    ($props.content.tag === 'input')
-      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("input", {
-          key: 0,
-          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
-          onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($event, $props.content))),
-          id: $options.computedId($props.content),
-          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
-        }, null, 14 /* CLASS, STYLE, PROPS */, _hoisted_1))
-      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
-    ($props.content.tag === 'img')
-      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("img", {
-          key: 1,
-          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
-          onClick: _cache[1] || (_cache[1] = $event => ($options.handleButtonClick($event, $props.content))),
-          id: $options.computedId($props.content),
-          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content)),
-          alt: $options.computedAlt($props.content),
-          src: $options.computedSrc($props.content)
-        }, null, 14 /* CLASS, STYLE, PROPS */, _hoisted_2))
-      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true),
-    ($props.content.tag !== 'input' && $props.content.tag !== 'img')
-      ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])("div", {
-          key: 2,
-          class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
-          onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($event, $props.content))),
-          id: $options.computedId($props.content),
-          style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
-        }, [
-          Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.computedText($props.content)) + " ", 1 /* TEXT */),
+  return ($options.isSelfClosingElement($props.content.tag))
+    ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($props.content.tag), {
+        key: 0,
+        class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
+        onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($event, $props.content))),
+        id: $options.computedId($props.content),
+        style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content)),
+        src: $options.computedSrc($props.content)
+      }, null, 8 /* PROPS */, ["id", "class", "style", "src"]))
+    : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($props.content.tag), {
+        key: 1,
+        class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
+        onClick: _cache[1] || (_cache[1] = $event => ($options.handleButtonClick($event, $props.content))),
+        id: $options.computedId($props.content),
+        style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
+      }, {
+        default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
           ($props.content.content)
             ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], { key: 0 }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content) => {
                 return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
@@ -14481,9 +14485,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 }, null, 8 /* PROPS */, ["content", "class", "id", "style"]))
               }), 128 /* KEYED_FRAGMENT */))
             : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
-        ], 14 /* CLASS, STYLE, PROPS */, _hoisted_3))
-      : Object(vue__WEBPACK_IMPORTED_MODULE_0__["createCommentVNode"])("v-if", true)
-  ], 64 /* STABLE_FRAGMENT */))
+        ]),
+        _: 1 /* STABLE */
+      }, 8 /* PROPS */, ["id", "class", "style"]))
 }
 
 /***/ }),

@@ -3,6 +3,7 @@
     <div class="row">
       <Header></Header>
       <Aside>
+        <!--<component is="h1" class="display-1"> anything inside component </component>-->
         <Widgets>
           <Widget>
             <Layers></Layers>

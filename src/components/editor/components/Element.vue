@@ -1,11 +1,12 @@
 <template>
   <template v-if="isSelfClosingElement(content.tag)">
-    <component :is="content.tag" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
+    <component :is="computedTag(content)" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
       :class="computedClass(content)" :style="computedStyle(content)" :src="computedSrc(content)"/>
   </template>
   <template v-else>
-    <component :is="content.tag" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
+    <component :is="computedTag(content)" class="element" @click="handleButtonClick($event, content)" :id="computedId(content)"
       :class="computedClass(content)" :style="computedStyle(content)">
+      {{ computedText(content) }}
       <template v-if="content.content">
         <Element v-for="content in content.content" v-bind:key="content.uuid" :content="content"
           :class="computedClass(content)" :id="computedId(content)" :style="computedStyle(content)">

@@ -14,11 +14,11 @@
       <div class="px-4 py-2 action-content">
         <div class="form-group">
           <div class="form-group row">
-            <div class="col my-auto">
-              <input ref="input" type="text" class="form-control" v-model="content.label"
+            <div class="col my-auto ps-0">
+              <input ref="input" type="text" class="form-control form-control-sm" v-model="content.label"
                 @click="handleButtonClick(content)" @keyup="sentEditorContent" />
             </div>
-            <div class="col-auto my-auto">
+            <div class="col-auto my-auto pe-0 ps-0">
               <!--
               <button class="btn btn-info text-white me-2" @click="handleButtonClick(content, collapse)">
                 <i class="fa fa-edit"></i>
@@ -220,7 +220,7 @@ input.form-control {
 
 .emmet {
   position: absolute;
-  bottom: 6px;
+  bottom: 2px;
   font-size: 12px;
 }
 </style>
@@ -245,5 +245,14 @@ input.form-control {
 .accordion,
 .accordion-item {
   border-radius: 0 !important;
+}
+
+.accordion-button{
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+.accordion-body{
+  padding: 0px;
 }
 </style>

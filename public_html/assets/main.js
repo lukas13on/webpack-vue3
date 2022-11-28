@@ -14458,7 +14458,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Element = Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveComponent"])("Element", true)
 
   return ($options.isSelfClosingElement($props.content.tag))
-    ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($props.content.tag), {
+    ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($options.computedTag($props.content)), {
         key: 0,
         class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
         onClick: _cache[0] || (_cache[0] = $event => ($options.handleButtonClick($event, $props.content))),
@@ -14466,7 +14466,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content)),
         src: $options.computedSrc($props.content)
       }, null, 8 /* PROPS */, ["id", "class", "style", "src"]))
-    : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($props.content.tag), {
+    : (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["resolveDynamicComponent"])($options.computedTag($props.content)), {
         key: 1,
         class: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeClass"])(["element", $options.computedClass($props.content)]),
         onClick: _cache[1] || (_cache[1] = $event => ($options.handleButtonClick($event, $props.content))),
@@ -14474,6 +14474,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         style: Object(vue__WEBPACK_IMPORTED_MODULE_0__["normalizeStyle"])($options.computedStyle($props.content))
       }, {
         default: Object(vue__WEBPACK_IMPORTED_MODULE_0__["withCtx"])(() => [
+          Object(vue__WEBPACK_IMPORTED_MODULE_0__["createTextVNode"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["toDisplayString"])($options.computedText($props.content)) + " ", 1 /* TEXT */),
           ($props.content.content)
             ? (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(true), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementBlock"])(vue__WEBPACK_IMPORTED_MODULE_0__["Fragment"], { key: 0 }, Object(vue__WEBPACK_IMPORTED_MODULE_0__["renderList"])($props.content.content, (content) => {
                 return (Object(vue__WEBPACK_IMPORTED_MODULE_0__["openBlock"])(), Object(vue__WEBPACK_IMPORTED_MODULE_0__["createBlock"])(_component_Element, {
@@ -14515,8 +14516,8 @@ const _hoisted_6 = { class: "class" }
 const _hoisted_7 = { class: "px-4 py-2 action-content" }
 const _hoisted_8 = { class: "form-group" }
 const _hoisted_9 = { class: "form-group row" }
-const _hoisted_10 = { class: "col my-auto" }
-const _hoisted_11 = { class: "col-auto my-auto" }
+const _hoisted_10 = { class: "col my-auto ps-0" }
+const _hoisted_11 = { class: "col-auto my-auto pe-0 ps-0" }
 const _hoisted_12 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("i", { class: "fa fa-copy" }, null, -1 /* HOISTED */))
 const _hoisted_13 = [
   _hoisted_12
@@ -14565,7 +14566,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               Object(vue__WEBPACK_IMPORTED_MODULE_0__["withDirectives"])(Object(vue__WEBPACK_IMPORTED_MODULE_0__["createElementVNode"])("input", {
                 ref: "input",
                 type: "text",
-                class: "form-control",
+                class: "form-control form-control-sm",
                 "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($props.content.label) = $event)),
                 onClick: _cache[2] || (_cache[2] = $event => ($options.handleButtonClick($props.content))),
                 onKeyup: _cache[3] || (_cache[3] = (...args) => ($options.sentEditorContent && $options.sentEditorContent(...args)))

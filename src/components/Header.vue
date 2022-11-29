@@ -74,10 +74,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.logo{
-    width:auto;
-    height: 40px;
-}
-</style>

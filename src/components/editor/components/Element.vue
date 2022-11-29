@@ -116,12 +116,3 @@ export default {
   },
 };
 </script>
-<style>
-.element:hover {
-  outline: 1px dashed red !important;
-}
-
-.element.active {
-  outline: 2px dashed red !important;
-}
-</style>

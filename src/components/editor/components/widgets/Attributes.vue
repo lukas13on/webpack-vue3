@@ -73,11 +73,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-label {
-    font-weight: bold;;
-    display: block;
-    width: 100%;
-}
-</style>

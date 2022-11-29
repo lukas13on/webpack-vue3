@@ -1,6 +1,6 @@
 <template>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
+  <div :class="accordionItemClass(content)">
+    <h2 :class="accordionHeaderClass(content)">
       <button :class="accordionButtonClass(content)" @click="collapseContent">
         <span>{{ contentLabel(content) }}</span>
         <span class="emmet">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="accordion-body" :class="accordionBodyClass(content)" v-if="content.content">
+      <div :class="accordionBodyClass(content)" v-if="content.content">
         <Layer v-for="(content, index) in content.content" :key="index" :content="content">
         </Layer>
       </div>
@@ -68,11 +68,16 @@ export default {
   },
   methods: {
     accordionBodyClass: function (content) {
+      var standard = 'accordion-body';
       if (content.content.length > 0) {
-        return 'has-content';
+        standard += ' has-content';
       } else {
-        return 'no-content';
+        standard += ' no-content';
       }
+      if (content.active) {
+        standard += ' active';
+      }
+      return this.collapse === true ? standard : standard + ' collapsed';
     },
     computedEmmetTag: function (content) {
       return content.tag.length > 0 ? content.tag : 'div';
@@ -121,6 +126,20 @@ export default {
         standard += ' active';
       }
       return this.collapse === true ? standard : standard + ' collapsed';
+    },
+    accordionHeaderClass: function (content) {
+      var standard = 'accordion-header';
+      if (content.active) {
+        standard += ' active';
+      }
+      return this.collapse === true ? standard : standard;
+    },
+    accordionItemClass: function (content) {
+      var standard = 'accordion-item';
+      if (content.active) {
+        standard += ' active';
+      }
+      return this.collapse === true ? standard : standard;
     },
     accordionCollapseClass: function (content) {
       var standard = 'accordion-collapse';
@@ -199,60 +218,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.accordion-button.active {
-  background-color: #0d6efd;
-  color: #fff;
-  font-weight: bold;
-}
-
-input.form-control {
-  cursor: pointer;
-}
-
-.accordion-button {
-  position: relative;
-}
-
-.text-highlight {
-  color: chartreuse
-}
-
-.emmet {
-  position: absolute;
-  bottom: 2px;
-  font-size: 12px;
-}
-</style>
-
-<style scoped>
-/* .accordion-collapse.show:not(.active) .accordion-body {
-  padding: 0px;
-  border-left: 1px solid #0d6efd;
-  border-top: 1px solid #0d6efd;
-  border-bottom: 1px solid #0d6efd;
-  border-right: 1px solid #0d6efd;
-  border-radius: 0.375rem;
-} */
-
-.accordion-collapse.show:not(.active) .accordion-body {
-  padding: 0px;
-  border-left: 6px solid #0d6efd;
-}
-
-.accordion-button,
-.accordion-header,
-.accordion,
-.accordion-item {
-  border-radius: 0 !important;
-}
-
-.accordion-button{
-  padding-top: 5px;
-  padding-bottom: 10px;
-}
-
-.accordion-body{
-  padding: 0px;
-}
-</style>

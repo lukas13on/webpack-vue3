@@ -94,11 +94,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-label {
-    display: block;
-    width: 100%;
-    font-weight:bold;
-}
-</style>

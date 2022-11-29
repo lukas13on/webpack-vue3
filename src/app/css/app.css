@@ -1,0 +1,110 @@
+.logo {
+    width: auto;
+    height: 40px;
+}
+
+.accordion-button.active {
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
+}
+
+input.form-control {
+    cursor: pointer;
+}
+
+.accordion-button {
+    position: relative;
+}
+
+.text-highlight {
+    color: chartreuse
+}
+
+.emmet {
+    position: absolute;
+    bottom: 5px;
+    font-size: 12px;
+}
+
+/* .accordion-button:not(.collapsed){
+    background-color: #0d6efd;
+}
+
+.accordion-button.collapsed{
+    background-color: #ffffff;
+} */
+
+.accordion-collapse.show .accordion-body {
+    padding: 0px;
+    border-left: 8px solid #cccccc;
+}
+
+.accordion-collapse.show:not(.active) .accordion-body {
+    padding: 0px;
+    border-left: 8px solid #b3d2ff;
+}
+
+.accordion-collapse.show.active .accordion-body {
+    padding: 0px;
+    border-left: 8px solid #0d6efd;
+}
+
+
+.accordion-button {
+    padding-top: 0px;
+    padding-bottom: 15px;
+}
+
+.accordion-body {
+    padding: 0px;
+    margin: 4px;
+}
+
+.accordion-button.active {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+.element:hover {
+    outline: 1px dashed red !important;
+}
+
+.element.active {
+    outline: 2px dashed red !important;
+}
+
+label {
+    display: block;
+    width: 100%;
+    font-weight:bold;
+}
+
+.accordion-button::after{
+    margin-top: 10px;
+}
+
+.accordion-button::after {
+    background-image: url('/static/icons/dark/chevron-down-solid.svg');
+    transform: none;
+}
+
+.accordion-button:not(.collapsed)::after{
+    background-image: url('/static/icons/light/chevron-up-solid.svg');
+    transform: none;
+}
+
+.accordion-button.collapsed:not(.active)::after{
+    background-image: url('/static/icons/dark/chevron-down-solid.svg');
+    transform: none;
+}
+
+.accordion-button:not(.active):not(.collapsed)::after{
+    background-image: url('/static/icons/colored/chevron-up-solid.svg');
+    transform: none;
+}
+
+.accordion-body.has-content .accordion-item, .accordion-body.has-content.accordion-header, .accordion-body.has-content .accordion-item{
+    border-radius: 0px;
+}
+
